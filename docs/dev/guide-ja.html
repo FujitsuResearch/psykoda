@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>開発方針 &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python versions" href="pythons-ja.html" />
+    <link rel="prev" title="TODO list" href="todos.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>開発方針<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>困り driven で柔軟に変更していく</p></li>
+<li><p>できるだけ変更の根拠を残す</p></li>
+<li><p>自明になった項目は削除する</p></li>
+</ul>
+<section id="id2">
+<h2>リポジトリ管理<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>master に直接 commit &amp; push せず Pull Request 経由で変更する</p>
+<ul>
+<li><p>merge には approve を要する設定にしてある</p></li>
+<li><p>タイトルに <code class="docutils literal notranslate"><span class="pre">[WIP]</span></code> (work in progress), <code class="docutils literal notranslate"><span class="pre">[FAILING]</span></code> などのあるものは merge しない</p></li>
+<li><p>review request は <code class="docutils literal notranslate"><span class="pre">[WIP]</span></code> (など) を取り除いたタイミングで行う (request される前に見てコメントするのはよいが review はしない)</p></li>
+<li><p>そろそろ CI が欲しい</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id3">
+<h2>(まだ) 利用し (てい) ないツール<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pytest-cov</span></code>: <code class="docutils literal notranslate"><span class="pre">coverage</span></code>+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> では不便な場合</p></li>
+</ul>
+</section>
+<section id="python-versions">
+<h2><a class="reference internal" href="pythons-ja.html"><span class="doc">Python versions</span></a><a class="headerlink" href="#python-versions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>3.5以下: 不要 (OSS化プロジェクト開始時点 (Day 0) で end-of-life)</p></li>
+<li><p>3.6, 3.7: 依存関係の問題で対象外</p></li>
+<li><p>3.8: オリジナル版 requirement (3.8.5)</p></li>
+<li><p>3.9: Day 0 の最新リリース (3.9.2, hotfixes: 3.9.4)</p></li>
+<li><p>3.10: 未 (<a class="reference external" href="https://www.python.org/dev/peps/pep-0619/">expected: 2021/10</a>)</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development Guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="todos.html">TODO list</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">開発方針</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">リポジトリ管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">(まだ) 利用し (てい) ないツール</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-versions">Python versions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pythons-ja.html">Python versions</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Development Guides</a><ul>
+      <li>Previous: <a href="todos.html" title="previous chapter">TODO list</a></li>
+      <li>Next: <a href="pythons-ja.html" title="next chapter">Python versions</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/dev/guide-ja.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

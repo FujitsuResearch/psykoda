@@ -1,0 +1,615 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>psykoda.feature_extraction &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for psykoda.feature_extraction</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Extract and manage feature values&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">ipaddress</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.lib.function_base</span> <span class="kn">import</span> <span class="n">iterable</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Index</span><span class="p">,</span> <span class="n">Series</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">lil_matrix</span>
+
+<span class="kn">from</span> <span class="nn">psykoda</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">psykoda.constants</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">ip</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="FeatureLabel"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureLabel">[docs]</a><span class="k">class</span> <span class="nc">FeatureLabel</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Feature matrix with label values</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    feature</span>
+<span class="sd">        scipy sparse feature matrix</span>
+
+<span class="sd">        :shape: (n_samples, n_features)</span>
+<span class="sd">    index</span>
+<span class="sd">        index of feature matrix</span>
+
+<span class="sd">        :length: n_samples</span>
+<span class="sd">    columns</span>
+<span class="sd">        column of feature matrix</span>
+
+<span class="sd">        :length: n_features</span>
+<span class="sd">    label</span>
+<span class="sd">        labels</span>
+
+<span class="sd">        :shape: (n_samples, )</span>
+<span class="sd">    idf_sid</span>
+<span class="sd">        IDF (Inverse Document Frequency) for, and indexed by, sid</span>
+<span class="sd">    idf_dport</span>
+<span class="sd">        IDF for, and indexed by, dest_port</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">feature</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+        <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">idf_sid</span><span class="p">:</span> <span class="n">Series</span><span class="p">,</span>
+        <span class="n">idf_dport</span><span class="p">:</span> <span class="n">Series</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idf_sid</span> <span class="o">=</span> <span class="n">idf_sid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idf_dport</span> <span class="o">=</span> <span class="n">idf_dport</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invariant</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FeatureLabel.extract_nonzeros"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureLabel.extract_nonzeros">[docs]</a>    <span class="k">def</span> <span class="nf">extract_nonzeros</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        restructure feature matrix by excluding all zero rows/cols</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_nonzeros_rows</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_nonzeros_cols</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_invariant</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FeatureLabel.extract_nonzeros_rows"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureLabel.extract_nonzeros_rows">[docs]</a>    <span class="k">def</span> <span class="nf">extract_nonzeros_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        exclude rows whose elements are all zeros</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FeatureLabel.extract_nonzeros_cols"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureLabel.extract_nonzeros_cols">[docs]</a>    <span class="k">def</span> <span class="nf">extract_nonzeros_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        exclude columns whose elements are all zeros</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FeatureLabel.loc"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureLabel.loc">[docs]</a>    <span class="k">def</span> <span class="nf">loc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Series</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        correspond to DataFrame.loc[sample]</span>
+<span class="sd">        e.g. sample = (pandas.Timestamp(&quot;2021-04-01 14:00:00&quot;), &quot;10.1.1.1&quot;)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sample</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Series</span>
+<span class="sd">            A series of features corresponding to sample.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">indices</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">col</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FeatureLabel.put_labels"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureLabel.put_labels">[docs]</a>    <span class="k">def</span> <span class="nf">put_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labeled_samples</span><span class="p">:</span> <span class="n">Series</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign label value 1 to known normal samples</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        labeled_samples</span>
+<span class="sd">            all-1 vector whose indexes are known normal</span>
+
+<span class="sd">            :index: Index[datetime_rounded: datetime, src_ip: str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">Series</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">labeled_samples</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">labeled_samples</span><span class="o">.</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">labeled_samples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FeatureLabel.split_train_test"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureLabel.split_train_test">[docs]</a>    <span class="k">def</span> <span class="nf">split_train_test</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">date_to_training</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">csr_matrix</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">Index</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;split feature matrix and return training and test sets</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        date_to_training</span>
+<span class="sd">            samples (and their features) earlier than date_to_training are used for training.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X_train</span>
+<span class="sd">            feature matrix for training</span>
+
+<span class="sd">            :shape: (n_samples_train, n_features)</span>
+<span class="sd">        y_train</span>
+<span class="sd">            labels for training</span>
+
+<span class="sd">            :length: n_samples_train</span>
+<span class="sd">        X_test</span>
+<span class="sd">            feature matrix for anomaly detection</span>
+
+<span class="sd">            :shape: (n_samples_test, n_features)</span>
+<span class="sd">        index_test: Index[datetime_rounded: datetime, src_ip: str]</span>
+<span class="sd">            row index for anomaly detection</span>
+
+<span class="sd">            :length: n_samples_test</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        --------</span>
+<span class="sd">        date_to_training is compared against datetime_rounded.replace(hour=0).  Samples with equality are included in training set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">Series</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="n">train_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">dtr_srcip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">date_to_training</span>
+                <span class="k">for</span> <span class="n">dtr_srcip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="p">[</span><span class="n">train_mask</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="n">train_mask</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="p">[</span><span class="o">~</span><span class="n">train_mask</span><span class="p">],</span>
+            <span class="n">Index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">)[</span><span class="o">~</span><span class="n">train_mask</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_invariant</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This equality must always hold&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="IDFConfig"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.IDFConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">IDFConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Settings for IDF (Inverse Document Frequency).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">min_count</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">num_feature</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="FeatureExtractionConfig"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.FeatureExtractionConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">FeatureExtractionConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Settings for feature_extraction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">idf</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IDFConfig</span><span class="p">]</span>
+    <span class="n">address_to_location</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="feature_extraction_all"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.feature_extraction_all">[docs]</a><span class="k">def</span> <span class="nf">feature_extraction_all</span><span class="p">(</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">idf_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IDFConfig</span><span class="p">],</span>
+    <span class="n">iptable</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FeatureLabel</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;compute feature matrix from preprocessed log for each sample</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log</span>
+<span class="sd">        data to construct feature matrix from.</span>
+
+<span class="sd">        :index:</span>
+<span class="sd">            (datetime_rounded, src_ip) (exact match)</span>
+<span class="sd">        :assumed:</span>
+<span class="sd">            (dest_ip, dest_port, sid, src_port) (included)</span>
+<span class="sd">    idf_config</span>
+<span class="sd">        Configuration for IDF</span>
+
+<span class="sd">        :key:</span>
+<span class="sd">            column</span>
+<span class="sd">        :value:</span>
+<span class="sd">            configuration</span>
+
+<span class="sd">        refer to calculate_idf and its unittests.</span>
+<span class="sd">    iptable</span>
+<span class="sd">        IP locations definition table</span>
+
+<span class="sd">        .. todo::</span>
+<span class="sd">            example</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_dst_port</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_PORT</span><span class="p">])</span>
+    <span class="n">_dst_port</span><span class="p">[</span><span class="n">_dst_port</span> <span class="o">&gt;=</span> <span class="mi">49152</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">_feature_extraction_all</span><span class="p">(</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_PORT</span><span class="p">:</span> <span class="n">_dst_port</span><span class="p">}),</span>
+        <span class="n">idf_config</span><span class="o">=</span><span class="n">idf_config</span><span class="p">,</span>
+        <span class="n">iptable</span><span class="o">=</span><span class="n">iptable</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_feature_extraction_all</span><span class="p">(</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">idf_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IDFConfig</span><span class="p">],</span>
+    <span class="n">iptable</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FeatureLabel</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;refer to feature_extraction_all.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log</span>
+<span class="sd">    idf_config</span>
+<span class="sd">        Configuration for IDF</span>
+
+<span class="sd">        :key:</span>
+<span class="sd">            column</span>
+<span class="sd">        :value:</span>
+<span class="sd">            configuration</span>
+
+<span class="sd">        refer to calculate_idf and its unittests.</span>
+<span class="sd">    iptable</span>
+<span class="sd">        IP locations definition table</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">idfs_groupss</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">dmap</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">column</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">calculate_idf</span><span class="p">(</span>
+            <span class="n">log</span><span class="p">,</span>
+            <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">num_idf_feature</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">num_feature</span><span class="p">,</span>
+            <span class="n">min_count</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">min_count</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">idf_config</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">idfs</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">idfs_groupss</span><span class="p">)</span>
+    <span class="n">groupss</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">idfs_groupss</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">groupss</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">ip2loc</span> <span class="o">=</span> <span class="n">find_ip_location</span><span class="p">(</span><span class="n">_ips</span><span class="p">(</span><span class="n">groupss</span><span class="p">),</span> <span class="n">iptable</span><span class="o">=</span><span class="n">iptable</span><span class="p">)</span>
+    <span class="n">dict_loc2idx</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">index_from_unsorted</span><span class="p">(</span><span class="n">ip2loc</span><span class="p">)</span>
+    <span class="n">sample_list</span> <span class="o">=</span> <span class="n">_samples</span><span class="p">(</span><span class="n">groupss</span><span class="p">)</span>
+    <span class="n">sample2loc2idx</span> <span class="o">=</span> <span class="n">Series</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">dict_loc2idx</span><span class="p">[</span><span class="n">ip2loc</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sample_list</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">sample_list</span>
+    <span class="p">)</span>
+    <span class="n">ip2idx</span> <span class="o">=</span> <span class="n">ip2loc</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">dict_loc2idx</span><span class="p">)</span>
+
+    <span class="n">num_locations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dict_loc2idx</span><span class="p">)</span>
+    <span class="n">num_idfs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">idfs</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+    <span class="n">sample2idx</span> <span class="o">=</span> <span class="n">Series</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">index_from_sorted</span><span class="p">(</span><span class="n">sample_list</span><span class="p">))</span>
+
+    <span class="n">_shape_tensor</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_locations</span><span class="p">,</span> <span class="n">num_locations</span><span class="p">,</span> <span class="n">num_idfs</span><span class="p">]</span>
+
+    <span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">dict_loc2idx</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">dict_loc2idx</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">_idfs</span><span class="p">(</span><span class="n">groupss</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="n">feature_matrix</span> <span class="o">=</span> <span class="n">_construct_feature_matrix</span><span class="p">(</span>
+        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_list</span><span class="p">),</span> <span class="n">_shape_tensor</span><span class="p">),</span>
+        <span class="n">idfs_groupss</span><span class="o">=</span><span class="n">idfs_groupss</span><span class="p">,</span>
+        <span class="n">sample_to_location_index</span><span class="o">=</span><span class="n">sample2loc2idx</span><span class="p">,</span>
+        <span class="n">sample_index</span><span class="o">=</span><span class="n">sample2idx</span><span class="p">,</span>
+        <span class="n">ip_index</span><span class="o">=</span><span class="n">ip2idx</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">FeatureLabel</span><span class="p">(</span>
+        <span class="n">feature</span><span class="o">=</span><span class="n">feature_matrix</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">sample_list</span><span class="p">,</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span>
+        <span class="n">idf_sid</span><span class="o">=</span><span class="n">idfs</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">SID</span><span class="p">],</span>
+        <span class="n">idf_dport</span><span class="o">=</span><span class="n">idfs</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_PORT</span><span class="p">],</span>
+    <span class="p">)</span>
+
+
+<span class="n">Group</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]</span>
+<span class="n">Groups</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_construct_feature_matrix</span><span class="p">(</span>
+    <span class="n">shape</span><span class="p">,</span>
+    <span class="n">idfs_groupss</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Series</span><span class="p">,</span> <span class="n">Groups</span><span class="p">]],</span>
+    <span class="n">sample_to_location_index</span><span class="p">,</span>
+    <span class="n">sample_index</span><span class="p">,</span>
+    <span class="n">ip_index</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">lil_matrix</span><span class="p">:</span>
+    <span class="n">feature_matrix</span> <span class="o">=</span> <span class="n">lil_matrix</span><span class="p">((</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="n">ravel_index</span> <span class="o">=</span> <span class="n">_ravel_index</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="p">(</span><span class="n">idf</span><span class="p">,</span> <span class="n">groups</span><span class="p">))</span> <span class="ow">in</span> <span class="n">idfs_groupss</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;column: </span><span class="si">%s</span><span class="s2">, idf: </span><span class="si">%s</span><span class="s2">, groups: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">column</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">idf</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">+</span> <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_IP</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+            <span class="c1"># accessing more than 100 times is no more significant than 100 times.</span>
+            <span class="n">tf</span> <span class="o">=</span> <span class="n">sizes</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">sizes</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_IP</span><span class="p">)</span><span class="o">.</span><span class="n">to_flat_index</span><span class="p">()</span>
+            <span class="n">dips</span> <span class="o">=</span> <span class="n">sizes</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_IP</span><span class="p">)</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">ravel_index</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">sample_to_location_index</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">samples</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">ip_index</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dips</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">i</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">feature_matrix</span><span class="p">[</span><span class="n">sample_index</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">samples</span><span class="p">],</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span> <span class="o">*</span> <span class="n">idf</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">feature_matrix</span>
+
+
+<span class="k">def</span> <span class="nf">_ravel_index</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;Convert multidimensional index into single dimensional index&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">coord</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">ret</span> <span class="o">*=</span> <span class="n">s</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">return</span> <span class="n">f</span>
+
+
+<div class="viewcode-block" id="calculate_idf"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.calculate_idf">[docs]</a><span class="k">def</span> <span class="nf">calculate_idf</span><span class="p">(</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">num_idf_feature</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_count</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Series</span><span class="p">,</span> <span class="n">Groups</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Calculate Inverse Document Frequency (IDF) of given column.</span>
+
+<span class="sd">    Every unique index is considered a document.  A value of given column is considered to appear in the document if and only if there is at least one row with the index and column values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log</span>
+<span class="sd">    column</span>
+<span class="sd">        name of column to calculate IDF values on.</span>
+<span class="sd">    num_idf_feature</span>
+<span class="sd">        (soft) maximum number of unique values of log[column] to keep IDF for.</span>
+<span class="sd">    min_count</span>
+<span class="sd">        minimum number of appearance of a log[column] value to calculate IDF for.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    idf</span>
+<span class="sd">        log(1 + raw_idf), indexed by column values</span>
+<span class="sd">        e.g. Series([5.3, 3.2, 2.8], index=[22, 80, 3389], name=dest_port_idf)</span>
+<span class="sd">    groups</span>
+<span class="sd">        list of (column_value, matching_dataframe), indexed the same as idf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># total number of documents</span>
+    <span class="n">df_denom</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+
+    <span class="c1"># number of documents in which each value appeaed</span>
+    <span class="n">unique_idx_by_value</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">group</span><span class="p">:</span> <span class="n">group</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
+
+    <span class="c1"># filter (by &gt;= min_count)</span>
+    <span class="n">relevant_values</span> <span class="o">=</span> <span class="n">min_count</span> <span class="o">&lt;=</span> <span class="n">log</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+    <span class="c1"># raw IDF</span>
+    <span class="n">idf_raw</span> <span class="o">=</span> <span class="n">df_denom</span> <span class="o">/</span> <span class="n">unique_idx_by_value</span><span class="p">[</span><span class="n">relevant_values</span><span class="p">]</span>
+
+    <span class="c1"># transformed IDF</span>
+    <span class="n">idf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">idf_raw</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># pylint: disable=no-member</span>
+    <span class="c1"># since idf_raw is Series, np.log actually returns Series, which has sort_values</span>
+    <span class="n">idf</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="n">col</span><span class="o">.</span><span class="n">IDF_SUFFIX</span>
+
+    <span class="c1"># keep largest num_idf_feature values, and ties</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">idf</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_idf_feature</span><span class="p">:</span>
+        <span class="n">idf</span> <span class="o">=</span> <span class="n">idf</span><span class="p">[</span><span class="n">idf</span> <span class="o">&gt;=</span> <span class="n">idf</span><span class="o">.</span><span class="n">iat</span><span class="p">[</span><span class="n">num_idf_feature</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">grouped</span><span class="o">.</span><span class="n">get_group</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idf</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">idf</span><span class="p">,</span> <span class="n">groups</span></div>
+
+
+<div class="viewcode-block" id="find_ip_location"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.find_ip_location">[docs]</a><span class="k">def</span> <span class="nf">find_ip_location</span><span class="p">(</span><span class="n">ip_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">iptable</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Series</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Find location information for IP addresses</span>
+
+<span class="sd">    Current implementation returns first matches, but this is not part of specification.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ip_list</span>
+<span class="sd">    iptable</span>
+<span class="sd">        location information table with at least two columns</span>
+
+<span class="sd">        :IP_TABLE_SUBNET: network address in CIDR format</span>
+<span class="sd">        :IP_TABLE_LOCATION: location name</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    location : Series</span>
+<span class="sd">        location information</span>
+
+<span class="sd">        :index: ip_address: str</span>
+<span class="sd">        :value: location_name: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">matcher</span> <span class="o">=</span> <span class="n">location_matcher</span><span class="p">(</span>
+        <span class="n">iptable</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">IP_TABLE_SUBNET</span><span class="p">],</span> <span class="n">iptable</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">IP_TABLE_LOCATION</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">Series</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">matcher</span><span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">address</span><span class="p">))</span> <span class="k">for</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">ip_list</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">ip_list</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="location_matcher"><a class="viewcode-back" href="../../psykoda.html#psykoda.feature_extraction.location_matcher">[docs]</a><span class="k">def</span> <span class="nf">location_matcher</span><span class="p">(</span><span class="n">subnets</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">locations</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a function that returns location when you input ip address.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subnets</span>
+<span class="sd">        Subnet addresses in CIDR format.</span>
+<span class="sd">    locations : Iterable[str]</span>
+<span class="sd">        Location names for each subnet address.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    matcher</span>
+<span class="sd">        A function that returns location when you input ip address.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matchers</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_network</span><span class="p">(</span><span class="n">subnet</span><span class="p">),</span> <span class="n">location</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">subnet</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">subnets</span><span class="p">,</span> <span class="n">locations</span><span class="p">)</span>
+    <span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_network</span><span class="p">(</span><span class="n">subnet</span><span class="p">),</span> <span class="n">ip</span><span class="o">.</span><span class="n">UNKNOWN_PRIVATE</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">ip</span><span class="o">.</span><span class="n">IPV4_PRIVATE</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">matcher</span><span class="p">(</span><span class="n">address</span><span class="p">):</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">subnet</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span> <span class="ow">in</span> <span class="n">matchers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">subnet</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">location</span>
+        <span class="k">return</span> <span class="n">ip</span><span class="o">.</span><span class="n">UNKNOWN_GLOBAL</span>
+
+    <span class="k">return</span> <span class="n">matcher</span></div>
+
+
+<span class="k">def</span> <span class="nf">_ips</span><span class="p">(</span><span class="n">groupss</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Groups</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">ret</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">groups</span> <span class="ow">in</span> <span class="n">groupss</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+                <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
+                    <span class="n">group</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                    <span class="n">group</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_IP</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_samples</span><span class="p">(</span><span class="n">groupss</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Groups</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="n">ret</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">groups</span> <span class="ow">in</span> <span class="n">groupss</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_idfs</span><span class="p">(</span><span class="n">groupss</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Groups</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span> <span class="ow">in</span> <span class="n">groupss</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

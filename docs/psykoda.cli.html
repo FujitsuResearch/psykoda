@@ -1,0 +1,714 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>psykoda.cli package &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="psykoda.constants package" href="psykoda.constants.html" />
+    <link rel="prev" title="psykoda package" href="psykoda.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="psykoda-cli-package">
+<h1>psykoda.cli package<a class="headerlink" href="#psykoda-cli-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="psykoda-cli-internal-module">
+<h2>psykoda.cli.internal module<a class="headerlink" href="#psykoda-cli-internal-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.cli.internal"></span><dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.AnomalyDetectionConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">AnomalyDetectionConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">required_srcip</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.SkipDetectionConfig" title="psykoda.cli.internal.SkipDetectionConfig"><span class="pre">psykoda.cli.internal.SkipDetectionConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">deepsad</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.html#psykoda.detection.DeepSAD.Config" title="psykoda.detection.DeepSAD.Config"><span class="pre">psykoda.detection.DeepSAD.Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.html#psykoda.detection.DeepSAD.TrainConfig" title="psykoda.detection.DeepSAD.TrainConfig"><span class="pre">psykoda.detection.DeepSAD.TrainConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.ThresholdConfig" title="psykoda.cli.internal.ThresholdConfig"><span class="pre">psykoda.cli.internal.ThresholdConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#AnomalyDetectionConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.AnomalyDetectionConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.AnomalyDetectionConfig.deepsad">
+<span class="sig-name descname"><span class="pre">deepsad</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="psykoda.html#psykoda.detection.DeepSAD.Config" title="psykoda.detection.DeepSAD.Config"><span class="pre">psykoda.detection.DeepSAD.Config</span></a></em><a class="headerlink" href="#psykoda.cli.internal.AnomalyDetectionConfig.deepsad" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.AnomalyDetectionConfig.required_srcip">
+<span class="sig-name descname"><span class="pre">required_srcip</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.SkipDetectionConfig" title="psykoda.cli.internal.SkipDetectionConfig"><span class="pre">psykoda.cli.internal.SkipDetectionConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.AnomalyDetectionConfig.required_srcip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.AnomalyDetectionConfig.threshold">
+<span class="sig-name descname"><span class="pre">threshold</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.ThresholdConfig" title="psykoda.cli.internal.ThresholdConfig"><span class="pre">psykoda.cli.internal.ThresholdConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.AnomalyDetectionConfig.threshold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.AnomalyDetectionConfig.train">
+<span class="sig-name descname"><span class="pre">train</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="psykoda.html#psykoda.detection.DeepSAD.TrainConfig" title="psykoda.detection.DeepSAD.TrainConfig"><span class="pre">psykoda.detection.DeepSAD.TrainConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.AnomalyDetectionConfig.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.ArgumentsConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">ArgumentsConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_period</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.TargetPeriod" title="psykoda.cli.internal.TargetPeriod"><span class="pre">psykoda.cli.internal.TargetPeriod</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#ArgumentsConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.ArgumentsConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Arguments modification configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target_period</strong> (<a class="reference internal" href="#psykoda.cli.internal.TargetPeriod" title="psykoda.cli.internal.TargetPeriod"><em>psykoda.cli.internal.TargetPeriod</em></a>) – default target period used to determine date_from and date_to values if missing.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.ArgumentsConfig.target_period">
+<span class="sig-name descname"><span class="pre">target_period</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.TargetPeriod" title="psykoda.cli.internal.TargetPeriod"><span class="pre">psykoda.cli.internal.TargetPeriod</span></a></em><a class="headerlink" href="#psykoda.cli.internal.ArgumentsConfig.target_period" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">DetectConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.ArgumentsConfig" title="psykoda.cli.internal.ArgumentsConfig"><span class="pre">psykoda.cli.internal.ArgumentsConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">detection_units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.DetectionUnitConfig" title="psykoda.cli.internal.DetectionUnitConfig"><span class="pre">psykoda.cli.internal.DetectionUnitConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">io</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.IOConfig" title="psykoda.cli.internal.IOConfig"><span class="pre">psykoda.cli.internal.IOConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.PreprocessConfig" title="psykoda.cli.internal.PreprocessConfig"><span class="pre">psykoda.cli.internal.PreprocessConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_extraction</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.html#psykoda.feature_extraction.FeatureExtractionConfig" title="psykoda.feature_extraction.FeatureExtractionConfig"><span class="pre">psykoda.feature_extraction.FeatureExtractionConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">anomaly_detection</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.AnomalyDetectionConfig" title="psykoda.cli.internal.AnomalyDetectionConfig"><span class="pre">psykoda.cli.internal.AnomalyDetectionConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#DetectConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.DetectConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectConfig.anomaly_detection">
+<span class="sig-name descname"><span class="pre">anomaly_detection</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.AnomalyDetectionConfig" title="psykoda.cli.internal.AnomalyDetectionConfig"><span class="pre">psykoda.cli.internal.AnomalyDetectionConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.DetectConfig.anomaly_detection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectConfig.arguments">
+<span class="sig-name descname"><span class="pre">arguments</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.ArgumentsConfig" title="psykoda.cli.internal.ArgumentsConfig"><span class="pre">psykoda.cli.internal.ArgumentsConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.DetectConfig.arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectConfig.detection_units">
+<span class="sig-name descname"><span class="pre">detection_units</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.DetectionUnitConfig" title="psykoda.cli.internal.DetectionUnitConfig"><span class="pre">psykoda.cli.internal.DetectionUnitConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.DetectConfig.detection_units" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectConfig.feature_extraction">
+<span class="sig-name descname"><span class="pre">feature_extraction</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="psykoda.html#psykoda.feature_extraction.FeatureExtractionConfig" title="psykoda.feature_extraction.FeatureExtractionConfig"><span class="pre">psykoda.feature_extraction.FeatureExtractionConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.DetectConfig.feature_extraction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectConfig.io">
+<span class="sig-name descname"><span class="pre">io</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.IOConfig" title="psykoda.cli.internal.IOConfig"><span class="pre">psykoda.cli.internal.IOConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.DetectConfig.io" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectConfig.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.PreprocessConfig" title="psykoda.cli.internal.PreprocessConfig"><span class="pre">psykoda.cli.internal.PreprocessConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.DetectConfig.preprocess" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectionUnitConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">DetectionUnitConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">services</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.cli.internal.Service" title="psykoda.cli.internal.Service"><span class="pre">psykoda.cli.internal.Service</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnets</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.cli.internal.Subnet" title="psykoda.cli.internal.Subnet"><span class="pre">psykoda.cli.internal.Subnet</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#DetectionUnitConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.DetectionUnitConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Detection unit configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>services</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#psykoda.cli.internal.Service" title="psykoda.cli.internal.Service"><em>psykoda.cli.internal.Service</em></a><em>]</em>) – map from names of service to service definitions</p></li>
+<li><p><strong>subnets</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#psykoda.cli.internal.Subnet" title="psykoda.cli.internal.Subnet"><em>psykoda.cli.internal.Subnet</em></a><em>]</em>) – map from names of subnet to subnet configurations</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectionUnitConfig.services">
+<span class="sig-name descname"><span class="pre">services</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.cli.internal.Service" title="psykoda.cli.internal.Service"><span class="pre">psykoda.cli.internal.Service</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.DetectionUnitConfig.services" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.DetectionUnitConfig.subnets">
+<span class="sig-name descname"><span class="pre">subnets</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.cli.internal.Subnet" title="psykoda.cli.internal.Subnet"><span class="pre">psykoda.cli.internal.Subnet</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.DetectionUnitConfig.subnets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.IOConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">IOConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.InputConfig" title="psykoda.cli.internal.InputConfig"><span class="pre">psykoda.cli.internal.InputConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.PreviousConfig" title="psykoda.cli.internal.PreviousConfig"><span class="pre">psykoda.cli.internal.PreviousConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.OutputConfig" title="psykoda.cli.internal.OutputConfig"><span class="pre">psykoda.cli.internal.OutputConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#IOConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.IOConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.IOConfig.input">
+<span class="sig-name descname"><span class="pre">input</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.InputConfig" title="psykoda.cli.internal.InputConfig"><span class="pre">psykoda.cli.internal.InputConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.IOConfig.input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.IOConfig.output">
+<span class="sig-name descname"><span class="pre">output</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.OutputConfig" title="psykoda.cli.internal.OutputConfig"><span class="pre">psykoda.cli.internal.OutputConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.IOConfig.output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.IOConfig.previous">
+<span class="sig-name descname"><span class="pre">previous</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.PreviousConfig" title="psykoda.cli.internal.PreviousConfig"><span class="pre">psykoda.cli.internal.PreviousConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.IOConfig.previous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="psykoda.cli.internal.Incomplete_Args_Exception">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">Incomplete_Args_Exception</span></span><a class="reference internal" href="_modules/psykoda/cli/internal.html#Incomplete_Args_Exception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.Incomplete_Args_Exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.InputConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">InputConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#InputConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.InputConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.InputConfig.dir">
+<span class="sig-name descname"><span class="pre">dir</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#psykoda.cli.internal.InputConfig.dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.LoadPreviousConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">LoadPreviousConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">known_normal</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="psykoda.cli.internal.LoadPreviousConfigItem"><span class="pre">psykoda.cli.internal.LoadPreviousConfigItem</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_anomaly</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="psykoda.cli.internal.LoadPreviousConfigItem"><span class="pre">psykoda.cli.internal.LoadPreviousConfigItem</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="psykoda.cli.internal.LoadPreviousConfigItem"><span class="pre">psykoda.cli.internal.LoadPreviousConfigItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#LoadPreviousConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.LoadPreviousConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Log loading settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list</strong> – path to CSV file in which labeled IP addresses are listed</p></li>
+<li><p><strong>ndate</strong> – time range for labeled IP addresses, in days</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.LoadPreviousConfig.known_anomaly">
+<span class="sig-name descname"><span class="pre">known_anomaly</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="psykoda.cli.internal.LoadPreviousConfigItem"><span class="pre">psykoda.cli.internal.LoadPreviousConfigItem</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.LoadPreviousConfig.known_anomaly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.LoadPreviousConfig.known_normal">
+<span class="sig-name descname"><span class="pre">known_normal</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="psykoda.cli.internal.LoadPreviousConfigItem"><span class="pre">psykoda.cli.internal.LoadPreviousConfigItem</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.LoadPreviousConfig.known_normal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.LoadPreviousConfig.unknown">
+<span class="sig-name descname"><span class="pre">unknown</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="psykoda.cli.internal.LoadPreviousConfigItem"><span class="pre">psykoda.cli.internal.LoadPreviousConfigItem</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.LoadPreviousConfig.unknown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.LoadPreviousConfigItem">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">LoadPreviousConfigItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndate</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">730</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#LoadPreviousConfigItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.LoadPreviousConfigItem.list">
+<span class="sig-name descname"><span class="pre">list</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.LoadPreviousConfigItem.list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.LoadPreviousConfigItem.ndate">
+<span class="sig-name descname"><span class="pre">ndate</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><em class="property"> <span class="pre">=</span> <span class="pre">730</span></em><a class="headerlink" href="#psykoda.cli.internal.LoadPreviousConfigItem.ndate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.OutputConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">OutputConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">share_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#OutputConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.OutputConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.OutputConfig.dir">
+<span class="sig-name descname"><span class="pre">dir</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#psykoda.cli.internal.OutputConfig.dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.OutputConfig.share_dir">
+<span class="sig-name descname"><span class="pre">share_dir</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.OutputConfig.share_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.OutputConfig.subdir">
+<span class="sig-name descname"><span class="pre">subdir</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.OutputConfig.subdir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.PreprocessConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">PreprocessConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exclude_lists</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">screening</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.preprocess.html#psykoda.preprocess.ScreeningConfig" title="psykoda.preprocess.ScreeningConfig"><span class="pre">psykoda.preprocess.ScreeningConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#PreprocessConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.PreprocessConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.PreprocessConfig.exclude_lists">
+<span class="sig-name descname"><span class="pre">exclude_lists</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.PreprocessConfig.exclude_lists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.PreprocessConfig.screening">
+<span class="sig-name descname"><span class="pre">screening</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="psykoda.preprocess.html#psykoda.preprocess.ScreeningConfig" title="psykoda.preprocess.ScreeningConfig"><span class="pre">psykoda.preprocess.ScreeningConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.PreprocessConfig.screening" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.PreviousConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">PreviousConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">load</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfig" title="psykoda.cli.internal.LoadPreviousConfig"><span class="pre">psykoda.cli.internal.LoadPreviousConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.io.labeled.html#psykoda.io.labeled.file.FileStorageConfig" title="psykoda.io.labeled.file.FileStorageConfig"><span class="pre">psykoda.io.labeled.file.FileStorageConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#PreviousConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.PreviousConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.PreviousConfig.load">
+<span class="sig-name descname"><span class="pre">load</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfig" title="psykoda.cli.internal.LoadPreviousConfig"><span class="pre">psykoda.cli.internal.LoadPreviousConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.PreviousConfig.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.PreviousConfig.log">
+<span class="sig-name descname"><span class="pre">log</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="psykoda.io.labeled.html#psykoda.io.labeled.file.FileStorageConfig" title="psykoda.io.labeled.file.FileStorageConfig"><span class="pre">psykoda.io.labeled.file.FileStorageConfig</span></a></em><a class="headerlink" href="#psykoda.cli.internal.PreviousConfig.log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.Service">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">Service</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#Service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.Service" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Service definition: set of destination port numbers</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span> <span class="o">=</span> <span class="n">Service</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssh</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="mi">22</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">all_but_ssh</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="n">exclude</span><span class="o">=</span><span class="p">[</span><span class="mi">22</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssh_or_https</span> <span class="o">=</span> <span class="n">Service</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="mi">22</span><span class="p">,</span> <span class="mi">443</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.Service.exclude">
+<span class="sig-name descname"><span class="pre">exclude</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.Service.exclude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.Service.include">
+<span class="sig-name descname"><span class="pre">include</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.Service.include" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.SkipDetectionConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">SkipDetectionConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#SkipDetectionConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.SkipDetectionConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.SkipDetectionConfig.test">
+<span class="sig-name descname"><span class="pre">test</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#psykoda.cli.internal.SkipDetectionConfig.test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.SkipDetectionConfig.train">
+<span class="sig-name descname"><span class="pre">train</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#psykoda.cli.internal.SkipDetectionConfig.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.Subnet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">Subnet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">services</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#Subnet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.Subnet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Subnet configuration: set of CIDR-formatted IP addresses with services to analyze</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">private_A</span> <span class="o">=</span> <span class="n">Subnet</span><span class="p">([</span><span class="s2">&quot;10.0.0.0/8&quot;</span><span class="p">],</span> <span class="n">get_names_of_services_from_config</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">private</span> <span class="o">=</span> <span class="n">Subnet</span><span class="p">([</span><span class="s2">&quot;private-A&quot;</span><span class="p">,</span> <span class="s2">&quot;private-B&quot;</span><span class="p">,</span> <span class="s2">&quot;private-C&quot;</span><span class="p">],</span> <span class="n">get_names_of_services_from_config</span><span class="p">())</span>  <span class="c1"># these constants are available for convenience and readability</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_network</span> <span class="o">=</span> <span class="n">Subnet</span><span class="p">([</span><span class="s2">&quot;10.0.0.0/16&quot;</span><span class="p">,</span> <span class="s2">&quot;10.1.1.0/24&quot;</span><span class="p">],</span> <span class="n">get_names_of_services_from_config</span><span class="p">())</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.Subnet.cidrs">
+<span class="sig-name descname"><span class="pre">cidrs</span></span><em class="property"><span class="pre">:</span> <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.Subnet.cidrs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.Subnet.services">
+<span class="sig-name descname"><span class="pre">services</span></span><em class="property"><span class="pre">:</span> <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.cli.internal.Subnet.services" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.TargetPeriod">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">TargetPeriod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#TargetPeriod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.TargetPeriod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.TargetPeriod.days">
+<span class="sig-name descname"><span class="pre">days</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><em class="property"> <span class="pre">=</span> <span class="pre">30</span></em><a class="headerlink" href="#psykoda.cli.internal.TargetPeriod.days" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.cli.internal.ThresholdConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">ThresholdConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_anomaly</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_score</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#ThresholdConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.ThresholdConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.ThresholdConfig.min_score">
+<span class="sig-name descname"><span class="pre">min_score</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#psykoda.cli.internal.ThresholdConfig.min_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.cli.internal.ThresholdConfig.num_anomaly">
+<span class="sig-name descname"><span class="pre">num_anomaly</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#psykoda.cli.internal.ThresholdConfig.num_anomaly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.apply_exclude_lists">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">apply_exclude_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_exclude_lists</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#apply_exclude_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.apply_exclude_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>exclude logs according to exclude lists in dir_exclude_lists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log</strong> – Source log.</p></li>
+<li><p><strong>dir_exclude_lists</strong> – The path of directory containing exclude list csv files.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Log after applying exclude list.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>log</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.configure_logging">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">configure_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#configure_logging"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.configure_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure execution log settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>debug</strong> – Whether to log “debug levels”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.detect_per_unit">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">detect_per_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.DetectConfig" title="psykoda.cli.internal.DetectConfig"><span class="pre">psykoda.cli.internal.DetectConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_all</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnet</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.cli.internal.Subnet" title="psykoda.cli.internal.Subnet"><span class="pre">psykoda.cli.internal.Subnet</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#detect_per_unit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.detect_per_unit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.load_log">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">load_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_IDS_log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_from</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_to</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrows_read</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#load_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.load_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>load IDS logs of the dates in [ date_from, date_to ]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_IDS_log</strong> – The path of the directory containing logs to be load.</p></li>
+<li><p><strong>date_from</strong> – Start date.</p></li>
+<li><p><strong>date_to</strong> – End date.</p></li>
+<li><p><strong>nrows_read</strong> – Maximum number of rows to load, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>IDS log.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>log</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.load_preprocess_log">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">load_preprocess_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.DetectConfig" title="psykoda.cli.internal.DetectConfig"><span class="pre">psykoda.cli.internal.DetectConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#load_preprocess_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.load_preprocess_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load and preprocess log.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Sets config.io.output.subdir</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.load_previous">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">load_previous</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.LoadPreviousConfigItem" title="psykoda.cli.internal.LoadPreviousConfigItem"><span class="pre">psykoda.cli.internal.LoadPreviousConfigItem</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_to</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.series.Series</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#load_previous"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.load_previous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.main_detection">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">main_detection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.DetectConfig" title="psykoda.cli.internal.DetectConfig"><span class="pre">psykoda.cli.internal.DetectConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#main_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.main_detection" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – </p></li>
+<li><p><strong>config</strong> – </p></li>
+<li><p><strong>log</strong> – <dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">columns</dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+</p></li>
+<li><p><strong>label</strong> – filled with 1
+:index:</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.main_detection_after_prepare_data">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">main_detection_after_prepare_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.html#psykoda.feature_extraction.FeatureLabel" title="psykoda.feature_extraction.FeatureLabel"><span class="pre">psykoda.feature_extraction.FeatureLabel</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#main_detection_after_prepare_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.main_detection_after_prepare_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split data and construct labeled training feature.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.main_detection_prepare_data">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">main_detection_prepare_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.html#psykoda.feature_extraction.FeatureExtractionConfig" title="psykoda.feature_extraction.FeatureExtractionConfig"><span class="pre">psykoda.feature_extraction.FeatureExtractionConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="psykoda.html#psykoda.feature_extraction.FeatureLabel" title="psykoda.feature_extraction.FeatureLabel"><span class="pre">psykoda.feature_extraction.FeatureLabel</span></a><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/cli/internal.html#main_detection_prepare_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.main_detection_prepare_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Feature extraction</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.main_detection_skip_or_detect">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">main_detection_skip_or_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_report</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.html#psykoda.feature_extraction.FeatureLabel" title="psykoda.feature_extraction.FeatureLabel"><span class="pre">psykoda.feature_extraction.FeatureLabel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_test_splitted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_train_labeled</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">scipy.sparse.csr.csr_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anomaly_detection_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.AnomalyDetectionConfig" title="psykoda.cli.internal.AnomalyDetectionConfig"><span class="pre">psykoda.cli.internal.AnomalyDetectionConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.io.labeled.html#psykoda.io.labeled.file.FileStorageConfig" title="psykoda.io.labeled.file.FileStorageConfig"><span class="pre">psykoda.io.labeled.file.FileStorageConfig</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#main_detection_skip_or_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.main_detection_skip_or_detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Anomaly detection and output the result.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.main_preproc_and_detection">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">main_preproc_and_detection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.DetectConfig" title="psykoda.cli.internal.DetectConfig"><span class="pre">psykoda.cli.internal.DetectConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#main_preproc_and_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.main_preproc_and_detection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data preprocessing and anomaly detection.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.output_result">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">output_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_report</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_train_labeled_embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_test_embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_anomaly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shap_value_idx_sorted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anomaly_score_sorted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">previous_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="psykoda.io.labeled.html#psykoda.io.labeled.file.FileStorageConfig" title="psykoda.io.labeled.file.FileStorageConfig"><span class="pre">psykoda.io.labeled.file.FileStorageConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#output_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.output_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the detection result and output the report.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.report_all">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">report_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_list_stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_save</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#report_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.report_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarizing all reports and save it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_list_stats</strong> (<em>list</em>) – List of stats file paths</p></li>
+<li><p><strong>path_save</strong> (<em>str</em>) – File path where the report will be saved</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.report_transfer">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">report_transfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_to</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#report_transfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.report_transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy Report Files to the Directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – File path of the report to copy.</p></li>
+<li><p><strong>dir_to</strong> (<em>str</em>) – Directory Path of destination directory.
+If you specify a directory that does not exist, a new directory is created.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – Destination directory not specified.</p></li>
+<li><p><strong>TypeError</strong> – Report file does not exist.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.set_default_date_detect">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">set_default_date_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.ArgumentsConfig" title="psykoda.cli.internal.ArgumentsConfig"><span class="pre">psykoda.cli.internal.ArgumentsConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#set_default_date_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.set_default_date_detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure training from/to dates according to args and config.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – Command line args.</p></li>
+<li><p><strong>config</strong> – Settings for arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Command line args with training from/to dates added.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>args</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.internal.validate_patterns">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.internal.</span></span><span class="sig-name descname"><span class="pre">validate_patterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">patterns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.indexes.base.Index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli/internal.html#validate_patterns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.internal.validate_patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip whitespaces in Index from left and right sides.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>patterns</strong> – Index.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Index with whitespace removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ret</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-psykoda.cli">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-psykoda.cli" title="Permalink to this headline">¶</a></h2>
+<p>Command line interface</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.main">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse command line arguments and call main routine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – Command line arguments are invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.main_detect">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.</span></span><span class="sig-name descname"><span class="pre">main_detect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.cli.internal.DetectConfig" title="psykoda.cli.internal.DetectConfig"><span class="pre">psykoda.cli.internal.DetectConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli.html#main_detect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.main_detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main routine for anmaly detection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – Command line arguments.</p></li>
+<li><p><strong>config</strong> – Settings for this command.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.cli.strptime">
+<span class="sig-prename descclassname"><span class="pre">psykoda.cli.</span></span><span class="sig-name descname"><span class="pre">strptime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_string</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/cli.html#strptime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.cli.strptime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string to datetime in COMMANDLINE_DATE_FORMAT format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>date_string</strong> – Date string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="psykoda.html">psykoda package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="psykoda.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">psykoda.cli package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.constants.html">psykoda.constants package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.html">psykoda.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.preprocess.html">psykoda.preprocess package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-detection-module">psykoda.detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-feature-extraction-module">psykoda.feature_extraction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-utils-module">psykoda.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#module-psykoda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+  <li><a href="psykoda.html">psykoda package</a><ul>
+      <li>Previous: <a href="psykoda.html" title="previous chapter">psykoda package</a></li>
+      <li>Next: <a href="psykoda.constants.html" title="next chapter">psykoda.constants package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/psykoda.cli.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

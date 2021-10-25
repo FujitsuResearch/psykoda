@@ -1,0 +1,2 @@
+datetime_rounded,src_ip,datetime_full,src_port,dest_ip,dest_port,sid
+2021-04-05 06:00:00,10.20.30.40,2021-04-05 06:07:08,6789,10.11.12.13,67,234444

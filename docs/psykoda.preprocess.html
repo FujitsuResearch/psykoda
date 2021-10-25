@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>psykoda.preprocess package &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Application Usage" href="app/index.html" />
+    <link rel="prev" title="psykoda.io.reporting package" href="psykoda.io.reporting.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="psykoda-preprocess-package">
+<h1>psykoda.preprocess package<a class="headerlink" href="#psykoda-preprocess-package" title="Permalink to this headline">¶</a></h1>
+<section id="module-psykoda.preprocess">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-psykoda.preprocess" title="Permalink to this headline">¶</a></h2>
+<p>Preprocessing</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.preprocess.RoundDatetime">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">RoundDatetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_unit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/preprocess.html#RoundDatetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.RoundDatetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.preprocess.ScreeningConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">ScreeningConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">100000000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/preprocess.html#ScreeningConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.ScreeningConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Log screening settings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.preprocess.ScreeningConfig.max">
+<span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><em class="property"> <span class="pre">=</span> <span class="pre">100000000</span></em><a class="headerlink" href="#psykoda.preprocess.ScreeningConfig.max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.preprocess.ScreeningConfig.min">
+<span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#psykoda.preprocess.ScreeningConfig.min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.addr_in_subnets">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">addr_in_subnets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sub_networks</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/preprocess.html#addr_in_subnets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.addr_in_subnets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build “in some of these subnets” filter for IP addresses</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>predicate for IP addresses</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>in_subnets(addr)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.drop_null">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">drop_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/preprocess.html#drop_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.drop_null" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.exclude_log">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">exclude_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclusion</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/preprocess.html#exclude_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.exclude_log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.extract_log">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">extract_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnets</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_ports</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_ports</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/preprocess.html#extract_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.extract_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>extract logs with subnets and service_dport</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subnets</strong> – List of subnets to which the IP addresses to be extracted belong. e.g [“10.25.148.0/24”, “192.168.0.0/16”] (CIDR format)
+None to extract all IP addresses.</p></li>
+<li><p><strong>include_ports</strong> – List of port numbers to extract. e.g [22, 3389]
+None to extract all port numbers.</p></li>
+<li><p><strong>exclude_ports</strong> – List of port numbers not to extract, e.g [22, 3389],
+Empty or None to exclude no port numbers.
+Exclusion takes precedence over inclusion.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.filter_out">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">filter_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_patterns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.indexes.base.Index</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/preprocess.html#filter_out"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.filter_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter out rows according to patterns of column values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log</strong> – </p></li>
+<li><p><strong>column_name</strong> – name of data or index column to match patterns against.</p></li>
+<li><p><strong>filter_patterns</strong> – patterns to filter out matching rows.
+if column_name is col.SRC_IP or col.DEST_IP, a pattern is a CIDR notation (ipaddress.ip_network() accepts).
+otherwise, a pattern is a string to match the values exactly.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.round_datetime">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">round_datetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_unit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/preprocess.html#round_datetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.round_datetime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.screening_numlog">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">screening_numlog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.preprocess.ScreeningConfig" title="psykoda.preprocess.ScreeningConfig"><span class="pre">psykoda.preprocess.ScreeningConfig</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/preprocess.html#screening_numlog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.screening_numlog" title="Permalink to this definition">¶</a></dt>
+<dd><p>exclude ip addresses whose numbers of logs are out of [ config.min, config.max ]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log</strong> – Source log.</p></li>
+<li><p><strong>config</strong> – Settings for screening.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Screened log.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>log</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.preprocess.set_index">
+<span class="sig-prename descclassname"><span class="pre">psykoda.preprocess.</span></span><span class="sig-name descname"><span class="pre">set_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/preprocess.html#set_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.preprocess.set_index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="psykoda.html">psykoda package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="psykoda.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="psykoda.cli.html">psykoda.cli package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.constants.html">psykoda.constants package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.html">psykoda.io package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">psykoda.preprocess package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-detection-module">psykoda.detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-feature-extraction-module">psykoda.feature_extraction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-utils-module">psykoda.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#module-psykoda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+  <li><a href="psykoda.html">psykoda package</a><ul>
+      <li>Previous: <a href="psykoda.io.reporting.html" title="previous chapter">psykoda.io.reporting package</a></li>
+      <li>Next: <a href="app/index.html" title="next chapter">Application Usage</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/psykoda.preprocess.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

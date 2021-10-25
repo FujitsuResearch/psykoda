@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Application Usage &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="基本的な使い方" href="../app_ja/index.html" />
+    <link rel="prev" title="psykoda.preprocess package" href="../psykoda.preprocess.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="application-usage">
+<h1>Application Usage<a class="headerlink" href="#application-usage" title="Permalink to this headline">¶</a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<p>Install <a class="reference external" href="https://www.python.org/downloads/">Python</a> and <a class="reference external" href="https://python-poetry.org/docs/">Poetry</a>.</p>
+</section>
+<section id="installation-command">
+<h3>Installation Command<a class="headerlink" href="#installation-command" title="Permalink to this headline">¶</a></h3>
+<p>Clone this repository and run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> to install with dependencies.</p>
+</section>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">psykoda</span> <span class="pre">-h</span></code>.</p>
+<p>This application is designed for periodical execution and manual inspection and response to anomalies.</p>
+<div class="highlight-dot notranslate"><div class="highlight"><pre><span></span><span class="k">digraph</span><span class="w"> </span><span class="nt">G</span><span class="w"></span>
+<span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">shape</span><span class="p">=</span><span class="s">box</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">log</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;IDS log&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">el</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Exclude Lists&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Config</span><span class="w"></span>
+<span class="w">    </span><span class="nt">Anomalies</span><span class="w"></span>
+<span class="w">    </span><span class="nt">FP</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;False Positives&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">TP</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;True Positives&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">shape</span><span class="p">=</span><span class="s">ellipse</span><span class="w"> </span><span class="na">style</span><span class="p">=</span><span class="s">dashed</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">human</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Manual Inspection&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">response</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">node</span><span class="w"> </span><span class="p">[</span><span class="na">shape</span><span class="p">=</span><span class="s">ellipse</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ees</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;extract-exclude-screening&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">feature</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;Feature Extraction&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">split</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;train-apply Split&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">detection</span><span class="w"> </span><span class="p">[</span><span class="na">label</span><span class="p">=</span><span class="s2">&quot;training and detection&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="w">  </span><span class="nt">log</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">ees</span><span class="w"></span>
+<span class="w">  </span><span class="nt">el</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">ees</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ees</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">feature</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">split</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">detection</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">Anomalies</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">human</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">FP</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">feature</span><span class="w"></span>
+<span class="w">  </span><span class="nt">human</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">TP</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nt">response</span><span class="w"></span>
+<span class="w">  </span><span class="nt">Config</span><span class="p">:</span><span class="nb">s</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="nt">ees</span><span class="p">:</span><span class="nb">e</span><span class="p">,</span><span class="w"> </span><span class="nt">feature</span><span class="p">:</span><span class="nb">e</span><span class="p">,</span><span class="w"> </span><span class="nt">split</span><span class="p">:</span><span class="nb">e</span><span class="p">,</span><span class="w"> </span><span class="nt">detection</span><span class="p">:</span><span class="nb">e</span><span class="p">}</span><span class="w"> </span><span class="p">[</span><span class="na">style</span><span class="p">=</span><span class="s">dotted</span><span class="p">]</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>A range of dates is required to execute detection.
+For each date in the range, a model is trained with IDS log and False positives before that date.
+Then, the model is applied with IDS log of that date to detect anomalies of that date.</p>
+<section id="input">
+<h3>Input<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
+<section id="ids-log">
+<h4>IDS log<a class="headerlink" href="#ids-log" title="Permalink to this headline">¶</a></h4>
+<p>The main input of this application is IDS log files.
+Each log record must include following fields:</p>
+<ul class="simple">
+<li><p>timestamp</p></li>
+<li><p>source IP address</p></li>
+<li><p>destination IP address</p></li>
+<li><p>destination port number</p></li>
+<li><p>IDS signature ID</p></li>
+</ul>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">type</th>
+<th align="left">support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">FS-CSV</td>
+<td align="left">fully supported</td>
+</tr>
+<tr>
+<td align="left"><a href="http://manual-snort-org.s3-website-us-east-1.amazonaws.com/node21.html#SECTION00366000000000000000">snort-CSV</a></td>
+<td align="left">partially tested for Snort 2.x</td>
+</tr>
+<tr>
+<td align="left"><a href="http://manual-snort-org.s3-website-us-east-1.amazonaws.com/node21.html#SECTION00361000000000000000">snort-syslog</a></td>
+<td align="left">on roadmap</td>
+</tr>
+<tr>
+<td align="left">Snort 3</td>
+<td align="left">on roadmap</td>
+</tr>
+</tbody>
+</table></section>
+<section id="exclude-lists">
+<h4>Exclude lists<a class="headerlink" href="#exclude-lists" title="Permalink to this headline">¶</a></h4>
+<p>Pattern matching of field values can be used to exclude some part of log from whole analysis.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">Data Type</th>
+<th align="left">Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">IP address</td>
+<td align="left">CIDR format</td>
+</tr>
+<tr>
+<td align="left">other</td>
+<td align="left">exact match</td>
+</tr>
+</tbody>
+</table></section>
+<section id="labels">
+<h4>Labels<a class="headerlink" href="#labels" title="Permalink to this headline">¶</a></h4>
+<p>Known normal samples help semi-supervised anomaly detection to reduce false positives.
+They can be provided as a list of (timestamp, source IP address)es.
+Feature values for them will be constructed from corresponding log records saved in previous executions.</p>
+</section>
+</section>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h3>
+<p>All configuration goes to a configuration file, whose path should be passed as <code class="docutils literal notranslate"><span class="pre">--path_config</span></code> required option.
+Configuration file should be in JSON and include an object.</p>
+<p>Refer to:</p>
+<ul class="simple">
+<li><p>API Reference for keys and definitions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config.json</span></code> included in this repository for an example.</p></li>
+<li><p><a class="reference external" href="https://tech.preferred.jp/en/blog/working-with-configuration-in-python/">Best Practices for Working with Configuration in Python Applications</a>
+when modifying the example app to create your own app with configuration:
+Use <a class="reference external" href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a> to define configuration and <a class="reference external" href="https://github.com/konradhalas/dacite">dacite</a> to convert from a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+</ul>
+</section>
+<section id="output">
+<h3>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h3>
+<p>Inside the output directory specified in config, a subdirectory will be created for each detection unit.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">File</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>stats.json</code></td>
+<td align="left">metadata</td>
+</tr>
+<tr>
+<td align="left"><code>report.csv</code></td>
+<td align="left">anomalies detected</td>
+</tr>
+<tr>
+<td align="left"><code>plot_detection.png</code></td>
+<td align="left">visualization</td>
+</tr>
+</tbody>
+</table><p>Log records for each anomaly will be also provided, for both manual inspection and use as known false positives in subsequent executions.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">src</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Application Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation-command">Installation Command</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#input">Input</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ids-log">IDS log</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exclude-lists">Exclude lists</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#labels">Labels</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../psykoda.preprocess.html" title="previous chapter">psykoda.preprocess package</a></li>
+      <li>Next: <a href="../app_ja/index.html" title="next chapter">基本的な使い方</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/app/index.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

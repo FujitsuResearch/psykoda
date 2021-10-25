@@ -1,0 +1,51 @@
+{
+    "subnet": "ALL",
+    "service": "ALL_but_SSH",
+    "date_from": "2020-04-04",
+    "date_to": "2020-04-06",
+    "num_samples_st_detection": 26,
+    "num_samples_training": 40,
+    "date_from_training": "2020-03-14",
+    "date_to_training": "2020-04-03",
+    "num_samples_labeled": 3,
+    "samples_labeled": [
+        [
+            {
+                "type": "datetime",
+                "value": "2020-04-01 08:00:00"
+            },
+            "10.1.1.4"
+        ],
+        [
+            {
+                "type": "datetime",
+                "value": "2020-04-03 08:00:00"
+            },
+            "10.1.1.5"
+        ],
+        [
+            {
+                "type": "datetime",
+                "value": "2020-04-05 08:00:00"
+            },
+            "10.1.1.6"
+        ]
+    ],
+    "num_anomaly": 2,
+    "name_anomaly": [
+        [
+            {
+                "type": "datetime",
+                "value": "2020-04-06 08:00:00"
+            },
+            "10.1.1.6"
+        ],
+        [
+            {
+                "type": "datetime",
+                "value": "2020-04-05 08:00:00"
+            },
+            "10.1.1.6"
+        ]
+    ]
+}

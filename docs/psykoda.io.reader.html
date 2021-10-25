@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>psykoda.io.reader package &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="psykoda.io.reporting package" href="psykoda.io.reporting.html" />
+    <link rel="prev" title="psykoda.io.labeled package" href="psykoda.io.labeled.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="psykoda-io-reader-package">
+<h1>psykoda.io.reader package<a class="headerlink" href="#psykoda-io-reader-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="psykoda-io-reader-base-module">
+<h2>psykoda.io.reader.base module<a class="headerlink" href="#psykoda-io-reader-base-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.io.reader.base"></span><p>API</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.reader.base.Reader">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.reader.base.</span></span><span class="sig-name descname"><span class="pre">Reader</span></span><a class="reference internal" href="_modules/psykoda/io/reader/base.html#Reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reader.base.Reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>IDS log reader API.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.io.reader.base.Reader.load_log">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">load_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/io/reader/base.html#Reader.load_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reader.base.Reader.load_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load IDS log of date.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="psykoda-io-reader-snort-csv-module">
+<h2>psykoda.io.reader.snort_csv module<a class="headerlink" href="#psykoda-io-reader-snort-csv-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.io.reader.snort_csv"></span><p>Snort CSV files</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="psykoda.io.reader.snort_csv.ColumnsNotFound">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.reader.snort_csv.</span></span><span class="sig-name descname"><span class="pre">ColumnsNotFound</span></span><a class="reference internal" href="_modules/psykoda/io/reader/snort_csv.html#ColumnsNotFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reader.snort_csv.ColumnsNotFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>snort.conf line does not have columns information.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.reader.snort_csv.SnortCSV">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.reader.snort_csv.</span></span><span class="sig-name descname"><span class="pre">SnortCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">['timestamp',</span> <span class="pre">'sig_generator',</span> <span class="pre">'sig_id',</span> <span class="pre">'sig_rev',</span> <span class="pre">'msg',</span> <span class="pre">'proto',</span> <span class="pre">'src',</span> <span class="pre">'srcport',</span> <span class="pre">'dst',</span> <span class="pre">'dstport',</span> <span class="pre">'ethsrc',</span> <span class="pre">'ethdst',</span> <span class="pre">'ethlen',</span> <span class="pre">'tcpflags',</span> <span class="pre">'tcpseq',</span> <span class="pre">'tcpack',</span> <span class="pre">'tcplen',</span> <span class="pre">'tcpwindow',</span> <span class="pre">'ttl',</span> <span class="pre">'tos',</span> <span class="pre">'id',</span> <span class="pre">'dgmlen',</span> <span class="pre">'iplen',</span> <span class="pre">'icmptype',</span> <span class="pre">'icmpcode',</span> <span class="pre">'icmpid',</span> <span class="pre">'icmpseq']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_included</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/reader/snort_csv.html#SnortCSV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reader.snort_csv.SnortCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#psykoda.io.reader.base.Reader" title="psykoda.io.reader.base.Reader"><code class="xref py py-class docutils literal notranslate"><span class="pre">psykoda.io.reader.base.Reader</span></code></a></p>
+<p>Load IDS log from Snort CSV files.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.io.reader.snort_csv.SnortCSV.load_log">
+<span class="sig-name descname"><span class="pre">load_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/io/reader/snort_csv.html#SnortCSV.load_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reader.snort_csv.SnortCSV.load_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load IDS log of date.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.io.reader.snort_csv.columns">
+<span class="sig-prename descclassname"><span class="pre">psykoda.io.reader.snort_csv.</span></span><span class="sig-name descname"><span class="pre">columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">TextIO</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/reader/snort_csv.html#columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reader.snort_csv.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse snort.conf into columns information.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.io.reader.snort_csv.columns_from_conf_line">
+<span class="sig-prename descclassname"><span class="pre">psykoda.io.reader.snort_csv.</span></span><span class="sig-name descname"><span class="pre">columns_from_conf_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/reader/snort_csv.html#columns_from_conf_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reader.snort_csv.columns_from_conf_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse snort.conf line into columns information.</p>
+</dd></dl>
+
+</section>
+<section id="psykoda-io-reader-snort-syslog-module">
+<h2>psykoda.io.reader.snort_syslog module<a class="headerlink" href="#psykoda-io-reader-snort-syslog-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.io.reader.snort_syslog"></span><p>Snort syslog</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>whole module</p>
+</div>
+</section>
+<section id="module-psykoda.io.reader">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-psykoda.io.reader" title="Permalink to this headline">¶</a></h2>
+<p>IDS log readers.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="psykoda.html">psykoda package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="psykoda.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="psykoda.cli.html">psykoda.cli package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.constants.html">psykoda.constants package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="psykoda.io.html">psykoda.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.preprocess.html">psykoda.preprocess package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-detection-module">psykoda.detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-feature-extraction-module">psykoda.feature_extraction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-utils-module">psykoda.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#module-psykoda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+  <li><a href="psykoda.html">psykoda package</a><ul>
+  <li><a href="psykoda.io.html">psykoda.io package</a><ul>
+      <li>Previous: <a href="psykoda.io.labeled.html" title="previous chapter">psykoda.io.labeled package</a></li>
+      <li>Next: <a href="psykoda.io.reporting.html" title="next chapter">psykoda.io.reporting package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/psykoda.io.reader.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

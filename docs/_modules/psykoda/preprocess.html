@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>psykoda.preprocess &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for psykoda.preprocess</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Preprocessing&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">ipaddress</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">getLogger</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span>
+
+<span class="kn">from</span> <span class="nn">psykoda.constants</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">ip</span>
+<span class="kn">from</span> <span class="nn">psykoda.utils</span> <span class="kn">import</span> <span class="n">get_series</span><span class="p">,</span> <span class="n">replace_match</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RoundDatetime"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.RoundDatetime">[docs]</a><span class="k">class</span> <span class="nc">RoundDatetime</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span> <span class="o">=</span> <span class="n">time_unit</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+            <span class="n">datetime_rounded</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime_full&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">dt</span><span class="p">:</span> <span class="n">round_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="round_datetime"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.round_datetime">[docs]</a><span class="k">def</span> <span class="nf">round_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">time_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span>
+            <span class="n">smaller_time_unit</span><span class="p">:</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">smaller_time_unit</span> <span class="ow">in</span> <span class="n">_time_units</span><span class="p">[:</span> <span class="n">_time_units</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">time_unit</span><span class="p">)]</span>
+        <span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_index"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.set_index">[docs]</a><span class="k">def</span> <span class="nf">set_index</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">&quot;datetime_rounded&quot;</span><span class="p">,</span> <span class="s2">&quot;src_ip&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="drop_null"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.drop_null">[docs]</a><span class="k">def</span> <span class="nf">drop_null</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span></div>
+
+
+<span class="k">def</span> <span class="nf">_in_subnets</span><span class="p">(</span>
+    <span class="n">series</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">subnets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">empty_is_all</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1"># corner case: no filtering</span>
+    <span class="k">if</span> <span class="n">subnets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># corner case: subnet has no element</span>
+    <span class="k">if</span> <span class="n">empty_is_all</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">subnets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="s2">&quot;`subnets` is empty: all IP addresses are included&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Explicit None (in Python; null in JSON) is preferred&quot;</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># An array in which the elements corresponding to</span>
+    <span class="c1"># the IP addresses in the subnet will be True.</span>
+    <span class="n">bools_ip</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">series</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># Type conversion</span>
+    <span class="n">sub_networks</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_network</span><span class="p">(</span><span class="n">replace_match</span><span class="p">(</span><span class="n">ip</span><span class="o">.</span><span class="n">IPV4_PRIVATE</span><span class="p">,</span> <span class="n">addr</span><span class="p">))</span> <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">subnets</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Generate bools_ip by helper function</span>
+    <span class="n">bools_ip</span><span class="p">[</span><span class="n">series</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">addr_in_subnets</span><span class="p">(</span><span class="n">sub_networks</span><span class="p">))]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">bools_ip</span>
+
+
+<div class="viewcode-block" id="addr_in_subnets"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.addr_in_subnets">[docs]</a><span class="k">def</span> <span class="nf">addr_in_subnets</span><span class="p">(</span><span class="n">sub_networks</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Build &quot;in some of these subnets&quot; filter for IP addresses</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    in_subnets(addr)</span>
+<span class="sd">        predicate for IP addresses</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Helper function that returns True if the IP address is in a subnets.</span>
+    <span class="k">def</span> <span class="nf">_ret</span><span class="p">(</span><span class="n">addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">sub_networks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="ow">in</span> <span class="n">subnet</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">_ret</span></div>
+
+
+<div class="viewcode-block" id="extract_log"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.extract_log">[docs]</a><span class="k">def</span> <span class="nf">extract_log</span><span class="p">(</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">subnets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">include_ports</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">exclude_ports</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    extract logs with subnets and service_dport</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subnets</span>
+<span class="sd">        List of subnets to which the IP addresses to be extracted belong. e.g [&quot;10.25.148.0/24&quot;, &quot;192.168.0.0/16&quot;] (CIDR format)</span>
+<span class="sd">        None to extract all IP addresses.</span>
+<span class="sd">    include_ports</span>
+<span class="sd">        List of port numbers to extract. e.g [22, 3389]</span>
+<span class="sd">        None to extract all port numbers.</span>
+<span class="sd">    exclude_ports</span>
+<span class="sd">        List of port numbers not to extract, e.g [22, 3389],</span>
+<span class="sd">        Empty or None to exclude no port numbers.</span>
+<span class="sd">        Exclusion takes precedence over inclusion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">log</span>
+
+    <span class="n">bools_service</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">include_ports</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">bools_service</span><span class="p">[:]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">include_ports</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;`include` is empty: all dest ports are included</span><span class="se">\n</span><span class="s2">Explicit None (in Python; null in JSON) is preferred&quot;</span>
+        <span class="p">)</span>
+        <span class="n">bools_service</span><span class="p">[:]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dport</span> <span class="ow">in</span> <span class="n">include_ports</span><span class="p">:</span>
+            <span class="n">bools_service</span><span class="p">[</span><span class="n">log</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_PORT</span><span class="p">]</span> <span class="o">==</span> <span class="n">dport</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">exclude_ports</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dport</span> <span class="ow">in</span> <span class="n">exclude_ports</span><span class="p">:</span>
+            <span class="n">bools_service</span><span class="p">[</span><span class="n">log</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DEST_PORT</span><span class="p">]</span> <span class="o">==</span> <span class="n">dport</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">bools_ip</span> <span class="o">=</span> <span class="n">_in_subnets</span><span class="p">(</span>
+        <span class="n">get_series</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">),</span> <span class="n">subnets</span><span class="p">,</span> <span class="n">empty_is_all</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;service: </span><span class="si">%s</span><span class="s2">, ip: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">bools_service</span><span class="p">,</span> <span class="n">bools_ip</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">log</span><span class="p">[</span><span class="n">bools_service</span> <span class="o">&amp;</span> <span class="n">bools_ip</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="filter_out"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.filter_out">[docs]</a><span class="k">def</span> <span class="nf">filter_out</span><span class="p">(</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filter_patterns</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Index</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Filter out rows according to patterns of column values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log</span>
+<span class="sd">    column_name</span>
+<span class="sd">        name of data or index column to match patterns against.</span>
+<span class="sd">    filter_patterns</span>
+<span class="sd">        patterns to filter out matching rows.</span>
+<span class="sd">        if column_name is col.SRC_IP or col.DEST_IP, a pattern is a CIDR notation (ipaddress.ip_network() accepts).</span>
+<span class="sd">        otherwise, a pattern is a string to match the values exactly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># find column_values: handle both value columns and index columns properly</span>
+    <span class="k">if</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">column_values</span> <span class="o">=</span> <span class="n">log</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+        <span class="n">column_values</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="n">column_name</span><span class="p">)</span><span class="o">.</span><span class="n">to_series</span><span class="p">(</span>
+            <span class="n">index</span><span class="o">=</span><span class="n">log</span><span class="o">.</span><span class="n">index</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;No value or index column name </span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2"> in DataFrame:</span><span class="se">\n</span><span class="si">{</span><span class="n">log</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># handle IP address column differently</span>
+    <span class="k">if</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">DEST_IP</span><span class="p">):</span>
+        <span class="n">mask</span><span class="p">[</span><span class="n">_in_subnets</span><span class="p">(</span><span class="n">column_values</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">filter_patterns</span><span class="p">))]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">filter_patterns</span><span class="p">:</span>
+            <span class="c1"># exact match</span>
+            <span class="n">mask</span><span class="p">[</span><span class="n">column_values</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">log</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ScreeningConfig"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.ScreeningConfig">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">ScreeningConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log screening settings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">min</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="nb">max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">8</span></div>
+
+
+<div class="viewcode-block" id="screening_numlog"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.screening_numlog">[docs]</a><span class="k">def</span> <span class="nf">screening_numlog</span><span class="p">(</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ScreeningConfig</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    exclude ip addresses whose numbers of logs are out of [ config.min, config.max ]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log</span>
+<span class="sd">        Source log.</span>
+<span class="sd">    config</span>
+<span class="sd">        Settings for screening.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    log</span>
+<span class="sd">        Screened log.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;screening samples whose num_logs are out of [ </span><span class="si">%d</span><span class="s2">, </span><span class="si">%d</span><span class="s2"> ]&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">max</span>
+    <span class="p">)</span>
+
+    <span class="n">num_logs</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="s2">&quot;src_ip&quot;</span><span class="p">))</span>
+    <span class="n">srcip_list_drop</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ip</span>
+        <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">num_logs</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">num_logs</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">min</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">max</span> <span class="o">&lt;</span> <span class="n">num_logs</span><span class="p">[</span><span class="n">ip</span><span class="p">])</span>
+    <span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;drop </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">srcip_list_drop</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;from:</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+    <span class="n">rows_to_remove</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">)</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">srcip_list_drop</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">log</span><span class="p">[</span><span class="o">~</span><span class="n">rows_to_remove</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="exclude_log"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.exclude_log">[docs]</a><span class="k">def</span> <span class="nf">exclude_log</span><span class="p">(</span><span class="n">log</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">exclusion</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">exclusion</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">log</span>
+        <span class="n">log</span> <span class="o">=</span> <span class="n">filter_out</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">log</span></div>
+
+
+<span class="n">_time_units</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;microsecond&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;second&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;minute&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;hour&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;day&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;month&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;year&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

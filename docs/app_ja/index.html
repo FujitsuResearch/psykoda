@@ -1,0 +1,839 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>基本的な使い方 &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Development Guides" href="../dev/index.html" />
+    <link rel="prev" title="Application Usage" href="../app/index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="id1">
+<h1>基本的な使い方<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>psykodaを使って自分で用意したIDSログに対してアノマリ検知を実施する場合は、まず事前準備を行う必要があります。
+2回目以降の実行またはサンプルログを使って実行する場合は、「実行」セクションから開始してください。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="#zyunbi">事前準備</a></p></li>
+<li><p><a class="reference external" href="#zikkou">実行</a></p></li>
+<li><p><a class="reference external" href="#kekka">結果を読む</a></p></li>
+<li><p><a class="reference external" href="#kakenchi">過検知の抑制</a></p></li>
+<li><p><a class="reference external" href="#usecase">ユースケース</a></p></li>
+</ul>
+<p><a id="zyunbi"></a></p>
+<section id="id2">
+<h2>事前準備<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="#zyunbi_idslog">IDSログの準備</a></p></li>
+<li><p><a class="reference external" href="#zyunbi_zyogai">除外リストの準備</a></p></li>
+<li><p><a class="reference external" href="#zyunbi_subnet">サブネット定義ファイルの準備</a></p></li>
+<li><p><a class="reference external" href="#zyunbi_config">設定ファイルの準備</a></p></li>
+<li><p><a class="reference external" href="#zyunbi_dir">ディレクトリ構成例</a></p></li>
+</ul>
+<p><a id="zyunbi_idslog"></a></p>
+<section id="ids">
+<h3>IDSログの準備<a class="headerlink" href="#ids" title="Permalink to this headline">¶</a></h3>
+<p>学習および検知の対象となるIDSログを準備します。</p>
+<p><strong>[IDSログ]</strong>
+IDSログは、次の形式をもつCSVファイルです。カラム名と入力例を示します。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">date_year</th>
+<th align="left">date_month</th>
+<th align="left">date_mday</th>
+<th align="left">date_hour</th>
+<th align="left">date_minute</th>
+<th align="left">date_second</th>
+<th align="left">src_ip</th>
+<th align="left">src_port</th>
+<th align="left">dest_ip</th>
+<th align="left">dest_port</th>
+<th align="left">sid</th>
+<th align="left">host</th>
+<th align="left">PRIORITY</th>
+<th align="left">event_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">2020</td>
+<td align="left">march</td>
+<td align="left">29</td>
+<td align="left">14</td>
+<td align="left">59</td>
+<td align="left">34</td>
+<td align="left">10.1.1.1</td>
+<td align="left">45723</td>
+<td align="left">10.1.1.10</td>
+<td align="left">445</td>
+<td align="left">200000</td>
+<td align="left">test1</td>
+<td align="left">3</td>
+<td align="left">testA</td>
+</tr>
+<tr>
+<td align="left">2020</td>
+<td align="left">march</td>
+<td align="left">29</td>
+<td align="left">15</td>
+<td align="left">13</td>
+<td align="left">05</td>
+<td align="left">10.1.1.2</td>
+<td align="left">57623</td>
+<td align="left">10.1.1.11</td>
+<td align="left">80</td>
+<td align="left">400000</td>
+<td align="left">test2</td>
+<td align="left">3</td>
+<td align="left">testB</td>
+</tr>
+</tbody>
+</table><p>それぞれのカラムの意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">カラム名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">date_year</td>
+<td align="left">ログが記録された年</td>
+</tr>
+<tr>
+<td align="left">date_month</td>
+<td align="left">ログが記録された月名（英語小文字）</td>
+</tr>
+<tr>
+<td align="left">date_mday</td>
+<td align="left">ログが記録された日</td>
+</tr>
+<tr>
+<td align="left">date_hour</td>
+<td align="left">ログが記録された時</td>
+</tr>
+<tr>
+<td align="left">date_minute</td>
+<td align="left">ログが記録された分</td>
+</tr>
+<tr>
+<td align="left">date_second</td>
+<td align="left">ログが記録された秒</td>
+</tr>
+<tr>
+<td align="left">src_ip</td>
+<td align="left">送信元IPアドレス</td>
+</tr>
+<tr>
+<td align="left">src_port</td>
+<td align="left">送信元ポート番号</td>
+</tr>
+<tr>
+<td align="left">dest_ip</td>
+<td align="left">宛先IPアドレス</td>
+</tr>
+<tr>
+<td align="left">dest_port</td>
+<td align="left">宛先ポート番号</td>
+</tr>
+<tr>
+<td align="left">sid</td>
+<td align="left">IDSのシグネチャID</td>
+</tr>
+<tr>
+<td align="left">host</td>
+<td align="left">ホスト名 (空欄可)</td>
+</tr>
+<tr>
+<td align="left">PRIORITY</td>
+<td align="left">優先度 (空欄可)</td>
+</tr>
+<tr>
+<td align="left">event_name</td>
+<td align="left">イベント名 (空欄可)</td>
+</tr>
+</tbody>
+</table><p>IDSログは日付ごとに<code class="docutils literal notranslate"><span class="pre">log_YYYY-MM-DD.csv</span></code>(例：log_2020_03_29.csv)というファイル名で保存してください。
+また、各IDSログは同一のディレクトリに保存してください。
+<code class="docutils literal notranslate"><span class="pre">example/IDS_log</span></code>ディレクトリでIDSログの実例を見ることができます。</p>
+<p><a id="zyunbi_zyogai"></a></p>
+</section>
+<section id="id3">
+<h3>除外リストの準備<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>学習や検知から除外する項目のリストを用意します。
+このリストを用意することで、特定のIPアドレスやシグネチャIDを学習や検知の対象から外すことができます。
+各除外リストは同一のディレクトリに保存してください。</p>
+<p>除外リストを使用しない場合は、空のディレクトリを用意してください。</p>
+<p><strong>[送信元IPアドレスの除外リスト]</strong>
+除外リスト（送信元IPアドレス）は次の形式を持つCSVファイルです。カラム名と入力例を示します。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">target</th>
+<th align="left">comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">10.11.11.11</td>
+<td align="left">hoge</td>
+</tr>
+<tr>
+<td align="left">10.254.0.0/16</td>
+<td align="left">CIDR format is available</td>
+</tr>
+</tbody>
+</table><p>それぞれのカラムの意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">カラム名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">target</td>
+<td align="left">除外する送信元IPアドレス（CIDR形式）</td>
+</tr>
+<tr>
+<td align="left">comment</td>
+<td align="left">コメント (空欄可)</td>
+</tr>
+</tbody>
+</table><p>ファイル名は<code class="docutils literal notranslate"><span class="pre">exclude_list_src_ip.csv</span></code>として保存してください。</p>
+<p><strong>[宛先IPアドレスの除外リスト]</strong>
+除外リスト（宛先IPアドレス）は次の形式を持つCSVファイルです。カラム名と入力例を示します。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">target</th>
+<th align="left">comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">172.0.0.0/8</td>
+<td align="left">CIDR format is available</td>
+</tr>
+<tr>
+<td align="left">10.11.11.11</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table><p>それぞれのカラムの意味は次の通りです。
+|カラム名|意味|
+|:–|:–|
+|target|除外する宛先IPアドレス（CIDR形式）|
+|comment|コメント (空欄可)|</p>
+<p>ファイル名は<code class="docutils literal notranslate"><span class="pre">exclude_list_dest_ip.csv</span></code>として保存してください。</p>
+<p><strong>[シグネチャIDの除外リスト]</strong>
+除外リスト（シグネチャID）は次の形式を持つCSVファイルです。カラム名と入力例を示します。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">target</th>
+<th align="left">comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">20</td>
+<td align="left">hoge</td>
+</tr>
+<tr>
+<td align="left">4000</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table><p>それぞれのカラムの意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">カラム名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">target</td>
+<td align="left">除外するシグネチャID</td>
+</tr>
+<tr>
+<td align="left">comment</td>
+<td align="left">コメント (空欄可)</td>
+</tr>
+</tbody>
+</table><p>ファイル名は<code class="docutils literal notranslate"><span class="pre">exclude_list_sid.csv</span></code>として保存してください。</p>
+<p><code class="docutils literal notranslate"><span class="pre">example/exclude_list</span></code>ディレクトリで除外リストの実例を見ることができます。</p>
+<p><a id="zyunbi_subnet"></a></p>
+</section>
+<section id="id4">
+<h3>サブネット定義ファイルの準備<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>CIDR形式でサブネットのネットワークアドレスとその所在ラベルを定義します。</p>
+<p><strong>[サブネット定義ファイル]</strong>
+サブネット定義ファイルは次の形式を持つCSVファイルです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">subnet</th>
+<th align="left">location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">10.1.0.0/16</td>
+<td align="left">Japan</td>
+</tr>
+<tr>
+<td align="left">10.10.0.0/16</td>
+<td align="left">Europe</td>
+</tr>
+</tbody>
+</table><p>それぞれのカラムの意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">カラム名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">subnet</td>
+<td align="left">ネットワークアドレス</td>
+</tr>
+<tr>
+<td align="left">location</td>
+<td align="left">所在ラベル</td>
+</tr>
+</tbody>
+</table><p>ネットワークアドレスによって所在を分ける必要がない場合は、サブネット定義ファイルを次のように作成してください。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">subnet</th>
+<th align="left">location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">0.0.0.0/0</td>
+<td align="left">ALL</td>
+</tr>
+</tbody>
+</table><p>カラム名のみ定義して値を定義しないcsvファイルを作成した場合は、クラスAからCのプライベートIPアドレスが所属する<code class="docutils literal notranslate"><span class="pre">unknown_private</span></code>と、それ以外のIPアドレスが所属する<code class="docutils literal notranslate"><span class="pre">unknown_global</span></code>が定義された扱いになります。</p>
+<p>サブネット定義ファイルは任意のファイル名で保存してください。</p>
+<p><code class="docutils literal notranslate"><span class="pre">example/ip_to_location.csv</span></code>でサブネット定義ファイルの実例を見ることができます。</p>
+<p><a id="zyunbi_config"></a></p>
+</section>
+<section id="id5">
+<h3>設定ファイルの準備<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>学習および検知の設定を記載したファイルを準備します。
+設定ファイルはJSON形式で記述します。
+設定ファイルの実例は<code class="docutils literal notranslate"><span class="pre">example/config.json</span></code>で見ることができます。</p>
+<p>事前準備で作成したファイルの所在を下記キーに対応する値として記載してください。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">キー名</th>
+<th align="left">値の意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">io.input.dir</td>
+<td align="left">IDSログを格納したディレクトリのパス</td>
+</tr>
+<tr>
+<td align="left">io.output.dir</td>
+<td align="left">検知結果レポートを格納するディレクトリのパス</td>
+</tr>
+<tr>
+<td align="left">io.previous.load.known_normal.list</td>
+<td align="left">過検知リストのファイルパス（<a href="#kakenchi">後述</a>）</td>
+</tr>
+<tr>
+<td align="left">preprocess.exclude_lists</td>
+<td align="left">除外リストを格納したディレクトリのパス</td>
+</tr>
+<tr>
+<td align="left">feature_extraction.address_to_location</td>
+<td align="left">サブネット定義ファイルのファイルパス</td>
+</tr>
+<tr>
+<td align="left">detection_units.services</td>
+<td align="left">サービス名と対応するポート番号を指定（下記参照）</td>
+</tr>
+<tr>
+<td align="left">detection_units.subnets</td>
+<td align="left">アノマリ検知を実施する対象のネットワークとサービスを指定（下記参照）</td>
+</tr>
+</tbody>
+</table><p>設定ファイル内に記述するファイルパスは絶対パスを使用することをおすすめします。
+(<code class="docutils literal notranslate"><span class="pre">psykoda</span></code>コマンドを呼び出すときの) カレントディレクトリに対する相対パスも使用することができますが、この仕様は設定ファイルからの相対パスへ変更される可能性があります。
+設定ファイルのパスを与えずに起動するとカレントディレクトリに<code class="docutils literal notranslate"><span class="pre">config.json</span></code>があると仮定して読み込むので、このふたつは同じことになります。</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">detection_units.services</span></code>について</strong></p>
+<p>この設定項目ではサービス名にポート番号のリストを紐づけることができます。
+ここで定義したサービス名は、<code class="docutils literal notranslate"><span class="pre">detection_units.subnets</span></code>で使用します。</p>
+<p><code class="docutils literal notranslate"><span class="pre">detection_units.services</span></code>の書式は次の通りです。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">SERVICE_NAME</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">INCLUDE_OR_EXCLUDE</span><span class="p">:</span> <span class="p">[</span><span class="n">PORT_NUMBERS_LIST</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>各項目の意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">項目名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">SERVICE_NAME</td>
+<td align="left">サービス名</td>
+</tr>
+<tr>
+<td align="left">INCLUDE_OR_EXCLUDE</td>
+<td align="left"><code>"include"</code>(リストのポート番号を含む通信を対象とする)または<code>"exclude"</code>(リストのポート番号を含まない通信を対象とする)</td>
+</tr>
+<tr>
+<td align="left">PORT_NUMBERS_LIST</td>
+<td align="left">宛先ポート番号のリスト (カンマ区切り)</td>
+</tr>
+</tbody>
+</table><p>入力例1: サービス名「http_and_https」に80番および443番ポートを関連付けたい場合は次のようになります。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;http_and_https&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;include&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">443</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>入力例2: サービス名「exclude_http」に80番ポート以外の全てのポートを関連付けたい場合は次のようになります。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;exclude_http&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;exclude&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">80</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong><code class="docutils literal notranslate"><span class="pre">detection_units.subnets</span></code>について</strong></p>
+<p>アノマリ検知を実施する対象のネットワークとサービスを指定します。</p>
+<p><code class="docutils literal notranslate"><span class="pre">detection_units.subnets</span></code>の書式は次の通りです。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;subnets&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">SUBNET_NAME</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cidrs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">NETWORK_ADDR_LIST</span><span class="p">],</span>
+        <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">SERVICE_NAME_LIST</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>各項目の意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">項目名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">SUBNET_NAME</td>
+<td align="left">検知対象ネットワーク名</td>
+</tr>
+<tr>
+<td align="left">NETWORK_ADDR_LIST</td>
+<td align="left">検知対象ネットワークのネットワークアドレス (CIDR形式)</td>
+</tr>
+<tr>
+<td align="left">SERVICE_NAME_LIST</td>
+<td align="left"><code>detection_units.services</code>で定義した検知対象サービス名のリスト (カンマ区切り)</td>
+</tr>
+</tbody>
+</table><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NETWORK_ADDR_LIST</span></code>には下記の定義済み文字列を設定することもできます。</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;private-A&quot;</span></code>: クラスAのプライベートIPアドレス（10.0.0.0/8）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;private-B&quot;</span></code>: クラスBのプライベートIPアドレス（172.16.0.0/12）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;private-C&quot;</span></code>: クラスCのプライベートIPアドレス（192.168.0.0/16）</p></li>
+</ul>
+</li>
+</ul>
+<p>入力例1: 宛先が192.168.1.0/24かつ前述の<code class="docutils literal notranslate"><span class="pre">exclude_http</span></code>サービスで定義されたポートへの通信をアノマリ検知対象とする場合は次のようになります。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;subnets&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;ALL&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cidrs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;192.168.1.0/24&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;exclude_http&quot;</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>入力例2: 宛先がプライベートIPアドレスかつ前述の<code class="docutils literal notranslate"><span class="pre">http_and_https</span></code>サービスで定義されたポートへの通信をアノマリ検知対象とする場合は次のようになります。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;subnets&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;ALL&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;cidrs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;private-A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;private-B&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;private-C&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;services&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;http_and_https&quot;</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>設定ファイルは任意のディレクトリに<code class="docutils literal notranslate"><span class="pre">config.json</span></code>として保存してください。
+他のファイル名を使用することもできます。
+<code class="docutils literal notranslate"><span class="pre">example/config.json</span></code>で設定ファイルの実例を見ることができます。</p>
+<p><a id="zyunbi_dir"></a></p>
+</section>
+<section id="id6">
+<h3>ディレクトリ構成例<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>事前準備にて用意したファイルやディレクトリの構成例を次に示します。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/
+├─ 設定ファイル
+├─ 過検知リストファイル
+├─ サブネット定義ファイル
+├─ IDSログ格納ディレクトリ
+│  └─ IDSログファイル群（log_YYYY-MM-DD.csv）
+├─ 除外リスト格納ディレクトリ
+│  ├─ exclude_list_src_ip.csv
+│  ├─ exclude_list_dest_ip.csv
+│  └─ exclude_list_sid.csv
+└─ 検知結果レポート格納ディレクトリ
+</pre></div>
+</div>
+<p>IDSログ格納ディレクトリにはIDSログファイルだけを、除外リスト格納ディレクトリには除外リストだけを配置し、検知結果レポートにはユーザ側でファイルを置かないことを強く推奨します。</p>
+<p><a id="zikkou"></a></p>
+</section>
+</section>
+<section id="id7">
+<h2>実行<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>次のコマンドでpsykodaを使ったアノマリ検知を実施することができます。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">kids</span> <span class="p">[</span><span class="o">--</span><span class="n">config</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="o">--</span><span class="n">date_from</span> <span class="n">DATE_FROM</span> <span class="o">--</span><span class="n">date_to</span> <span class="n">DATE_TO</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>CONFIG: 設定ファイルのファイルパス (省略時: カレントディレクトリ/<code class="docutils literal notranslate"><span class="pre">config.json</span></code>)</p></li>
+<li><p>DATE_FROM: 検知開始日(YYYY-MM-DD形式)</p></li>
+<li><p>DATE_FROM: 検知終了日(YYYY-MM-DD形式)</p></li>
+</ul>
+<p>例えば、<code class="docutils literal notranslate"><span class="pre">path/to/config.json</span></code>にある設定ファイルを使って、<code class="docutils literal notranslate"><span class="pre">2020年4月4日</span></code>から<code class="docutils literal notranslate"><span class="pre">2020年4月7日</span></code>までのIDSログを対象にアノマリ検知を実施する場合は次のようになります。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">kids</span> <span class="o">--</span><span class="n">config</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">date_from</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">04</span> <span class="o">--</span><span class="n">date_to</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">07</span>
+</pre></div>
+</div>
+<p><a id="kekka"></a></p>
+</section>
+<section id="id8">
+<h2>結果を読む<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>検知結果は、グラフや簡易結果レポート、詳細結果レポートとして提示されます。</p>
+<p><strong>[グラフ]</strong>
+psykodaでの検知が終わると、グラフが次のように画面表示されます。
+<img alt="結果グラフ" src="../_images/graph.png" /></p>
+<p>各記号の意味は次の通りです。</p>
+<ul class="simple">
+<li><p>●印: 正常な挙動を示すIPアドレス</p></li>
+<li><p>×印: 異常な挙動を示すIPアドレス（アノマリIPアドレス）</p></li>
+<li><p>▲印: 過検知IPアドレス</p></li>
+</ul>
+<p>×印に対応する凡例を見ることで、異常な挙動を示すIPアドレスとその日付を知ることができます。</p>
+<p><strong>[簡易結果レポート]</strong>
+簡易結果レポートは次のように標準エラー出力に出力されます。
+簡易結果レポートを読むことで、検知されたアノマリIPアドレスを知ることができます。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">snip</span><span class="o">*</span><span class="p">)</span>
+<span class="p">[</span><span class="n">TARGET</span> <span class="n">INFO</span><span class="p">]</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">loaded</span> <span class="n">log</span> <span class="n">entries</span><span class="p">:</span> <span class="mi">228</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">unique</span> <span class="n">source</span> <span class="n">IP</span> <span class="n">addresses</span><span class="p">:</span> <span class="mi">7</span>
+<span class="p">(</span><span class="o">*</span><span class="n">snip</span><span class="o">*</span><span class="p">)</span>
+<span class="p">[</span><span class="n">RESULT</span><span class="p">]</span>
+<span class="n">Detection</span> <span class="n">summary</span> <span class="n">file</span><span class="p">:</span> <span class="o">./</span><span class="n">example</span><span class="o">/</span><span class="n">result</span><span class="o">/</span><span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">04</span><span class="n">__2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">07</span>\<span class="n">report</span><span class="o">.</span><span class="n">csv</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">unique</span> <span class="n">anomaly</span> <span class="n">IP</span> <span class="n">addresses</span><span class="p">:</span> <span class="mi">2</span>
+<span class="o">-</span> <span class="mf">10.10.1.1</span> <span class="p">(</span><span class="nb">max</span> <span class="n">anomaly</span> <span class="n">score</span><span class="p">:</span> <span class="mf">149.71405</span><span class="p">)</span>
+<span class="o">-</span> <span class="mf">10.1.1.6</span> <span class="p">(</span><span class="nb">max</span> <span class="n">anomaly</span> <span class="n">score</span><span class="p">:</span> <span class="mf">77.38443</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>[詳細結果レポート]</strong>
+詳細結果レポートは設定ファイルの<code class="docutils literal notranslate"><span class="pre">io.output.dir</span></code>で設定したディレクトリに出力されます。
+出力先サブディレクトリとファイル名 <code class="docutils literal notranslate"><span class="pre">report.csv</span></code> は簡易結果レポートの<code class="docutils literal notranslate"><span class="pre">Detection</span> <span class="pre">summary</span> <span class="pre">file</span></code>にも記載されています。</p>
+<p>詳細結果レポートは次の形式を持つCSVファイルです。カラム名と入力例を示します。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">datetime_rounded</th>
+<th align="left">src_ip</th>
+<th align="left">subnet</th>
+<th align="left">service</th>
+<th align="left">anomaly_score</th>
+<th align="left">shap_top_1</th>
+<th align="left">top_1_shap_value</th>
+<th align="left">shap_top_2</th>
+<th align="left">top_2_shap_value</th>
+<th align="left">shap_top_3</th>
+<th align="left">top_3_shap_value</th>
+<th align="left">shap_top_4</th>
+<th align="left">top_4_shap_value</th>
+<th align="left">shap_top_5</th>
+<th align="left">top_5_shap_value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">2020-04-03 08:00:00</td>
+<td align="left">10.1.1.5</td>
+<td align="left">ALL</td>
+<td align="left">ALL</td>
+<td align="left">216.1618</td>
+<td align="left">Japan__ America__dest_port_445</td>
+<td align="left">1.6782</td>
+<td align="left">Japan__ America__sid_200000</td>
+<td align="left">1.2323</td>
+<td align="left">0</td>
+<td align="left">0.0</td>
+<td align="left">0</td>
+<td align="left">0.0</td>
+<td align="left">0</td>
+<td align="left">0.0</td>
+</tr>
+</tbody>
+</table><p>それぞれのカラムの意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">カラム名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">datetime_rounded</td>
+<td align="left">日付 (YYYY-MM-DD HH:00:00)</td>
+</tr>
+<tr>
+<td align="left">src_ip</td>
+<td align="left">異常なふるまいを示すIPアドレス</td>
+</tr>
+<tr>
+<td align="left">subnet</td>
+<td align="left">検知対象のサブネット名</td>
+</tr>
+<tr>
+<td align="left">service</td>
+<td align="left">検知対象のサービス名</td>
+</tr>
+<tr>
+<td align="left">anomaly_score</td>
+<td align="left">アノマリスコア (値が大きいほど異常)</td>
+</tr>
+<tr>
+<td align="left">shap_top_X</td>
+<td align="left">X番目のアノマリ要因</td>
+</tr>
+<tr>
+<td align="left">top_X_shap_value</td>
+<td align="left">X番目のアノマリ要因のスコア (値が大きいほどアノマリスコア上昇に寄与)</td>
+</tr>
+</tbody>
+</table><p><a id="kakenchi"></a></p>
+</section>
+<section id="id9">
+<h2>過検知の抑制<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>psykoda によるアノマリ検知は半教師あり学習であるため、既知の過検知に関する情報を利用して過検知を抑制することができます。
+これは psykoda を定期的に実行してアノマリを精査するようなシナリオで役に立ちます。</p>
+<section id="id10">
+<h3>過検知リストの準備<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>過去に過検知と判断された日時と送信元IPアドレスのリストを用意します。
+このリストに記載されている日時/送信元IPアドレスと似通った振る舞いをアノマリとして検知しにくくする効果があります。</p>
+<p>過検知リストを使用しない場合は、設定ファイルの<code class="docutils literal notranslate"><span class="pre">io.previous.load.known_normal.list</span></code>をキーごと削除してください。</p>
+<p><strong>[過検知リスト]</strong>
+過検知リストは次の形式を持つCSVファイルです。カラム名と入力例を示します。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">datetime_rounded</th>
+<th align="left">src_ip</th>
+<th align="left">comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">2020-04-01 08:00:00</td>
+<td align="left">10.1.1.4</td>
+<td align="left">hoge</td>
+</tr>
+</tbody>
+</table><p>それぞれのカラムの意味は次の通りです。</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th align="left">カラム名</th>
+<th align="left">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">datetime_rounded</td>
+<td align="left">検知された日付 (YYYY-MM-DD HH:00:00形式。分・秒の情報は入れてはならない。)</td>
+</tr>
+<tr>
+<td align="left">src_ip</td>
+<td align="left">送信元IPアドレス</td>
+</tr>
+<tr>
+<td align="left">comments</td>
+<td align="left">コメント (空欄可)</td>
+</tr>
+</tbody>
+</table><p>過去に検知されたアノマリの情報を評価結果レポートからコピーし、<code class="docutils literal notranslate"><span class="pre">datetime_rounded</span></code>, <code class="docutils literal notranslate"><span class="pre">src_ip</span></code> の値としてペーストしてください。</p>
+<p>過検知リストは任意のファイル名で保存してください。</p>
+<p><code class="docutils literal notranslate"><span class="pre">example/labeled_src_ip.csv</span></code>で過検知リストの実例を見ることができます。</p>
+<p><a id="usecase"></a></p>
+</section>
+</section>
+</section>
+<section id="id11">
+<h1>ユースケース<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h1>
+<p>psykodaは例えば下記のようなケースでIDSアラートログのアノマリ検知を行うことに役立ちます。</p>
+<section id="id12">
+<h2>ケース1<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<p>クライアント群が所属するネットワークとサーバが所属するネットワーク間の通信をIDSで監視しているケースです。
+IDSの誤検知が多い状況で、クライアントがサーバに対して不審な通信を行っていないかどうかを検知することができます。
+<img alt="../_images/usecase_1a.png" src="../_images/usecase_1a.png" /></p>
+</section>
+<section id="id13">
+<h2>ケース2<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<p>複数のネットワーク間の通信をIDSで監視しているケースです。
+IDSの誤検知が多い状況で、ネットワーク間を不審な通信が流れないないかどうかを検知することができます。
+<img alt="../_images/usecase_2a.png" src="../_images/usecase_2a.png" /></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../app/index.html">Application Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">基本的な使い方</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">事前準備</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ids">IDSログの準備</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">除外リストの準備</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">サブネット定義ファイルの準備</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">設定ファイルの準備</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">ディレクトリ構成例</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">実行</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">結果を読む</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">過検知の抑制</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id10">過検知リストの準備</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#id11">ユースケース</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id12">ケース1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">ケース2</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../app/index.html" title="previous chapter">Application Usage</a></li>
+      <li>Next: <a href="../dev/index.html" title="next chapter">Development Guides</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/app_ja/index.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
