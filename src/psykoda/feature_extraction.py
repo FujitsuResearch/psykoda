@@ -106,8 +106,7 @@ class FeatureLabel:
         idx = self.index.index(sample)
         indices = self.feature[idx].indices
         data = self.feature[idx].data
-        col = [self.columns[i] for i in indices]
-        return Series(data, index=col)
+        return Series(data, index=[self.columns[i] for i in indices])
 
     def put_labels(self, labeled_samples: Series):
         """
