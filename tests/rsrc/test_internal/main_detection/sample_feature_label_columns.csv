@@ -1,0 +1,11 @@
+Europe,Japan,sid_200000
+Europe,Japan,dest_port_445
+Japan,America,sid_200000
+Japan,America,dest_port_445
+Japan,Japan,sid_200001
+Japan,Japan,sid_200000
+Japan,Japan,dest_port_8080
+Japan,Japan,dest_port_8081
+Japan,Japan,dest_port_8082
+Japan,Japan,dest_port_3389
+Japan,Japan,dest_port_445

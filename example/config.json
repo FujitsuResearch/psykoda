@@ -1,0 +1,111 @@
+{
+  "arguments": {
+    "target_period": {}
+  },
+  "detection_units": {
+    "subnets": {
+      "ALL": {
+        "cidrs": [
+          "private-A",
+          "private-B",
+          "private-C"
+        ],
+        "services": [
+          "ALL_but_SSH"
+        ]
+      }
+    },
+    "services": {
+      "ALL": {},
+      "ALL_but_SSH": {
+        "exclude": [
+          22
+        ]
+      },
+      "SSH": {
+        "include": [
+          22
+        ]
+      },
+      "RDP": {
+        "include": [
+          3389
+        ]
+      }
+    }
+  },
+  "io": {
+    "input": {
+      "dir": "./example/IDS_log"
+    },
+    "previous":{
+      "load": {
+        "known_normal": {
+          "list": "./example/labeled_src_ip.csv",
+          "ndate": 28
+        }
+      },
+      "log": {
+        "base": {
+          "dir": "./example/previous_log"
+        },
+        "load": {},
+        "save": {
+          "all": false,
+          "compression": false
+        }
+      }
+    },
+    "output": {
+      "dir": "./example/result"
+    }
+  },
+  "preprocess": {
+    "exclude_lists": "./example/exclude_list",
+    "screening": {
+      "min": 1
+    }
+  },
+  "hypr_log_preprocess": {
+    "only_private_ip": true,
+    "thresh_min_numlog": 1,
+    "thresh_max_numlog": null
+  },
+  "feature_extraction": {
+    "idf": {
+      "sid": {
+        "min_count": 1,
+        "num_feature": 30
+      },
+      "dest_port": {
+        "min_count": 1,
+        "num_feature": 30
+      }
+    },
+    "address_to_location": "./example/ip_to_location.csv"
+  },
+  "anomaly_detection": {
+    "required_srcip": {
+      "train": 3,
+      "test": 5
+    },
+    "deepsad": {
+      "dim_hidden": [
+        4,
+        4,
+        4,
+        4,
+        2
+      ],
+      "eta": 16
+    },
+    "train": {
+      "epochs_pretrain": 30,
+      "epochs_train": 100
+    },
+    "threshold": {
+      "num_anomaly": 5,
+      "min_score": 10
+    }
+  }
+}

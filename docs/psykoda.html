@@ -1,0 +1,979 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>psykoda package &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="psykoda.cli package" href="psykoda.cli.html" />
+    <link rel="prev" title="src" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="psykoda-package">
+<h1>psykoda package<a class="headerlink" href="#psykoda-package" title="Permalink to this headline">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="psykoda.cli.html">psykoda.cli package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.cli.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.cli.html#psykoda-cli-internal-module">psykoda.cli.internal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.cli.html#module-psykoda.cli">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="psykoda.constants.html">psykoda.constants package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.constants.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.constants.html#psykoda-constants-column-module">psykoda.constants.column module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.constants.html#psykoda-constants-ipaddress-module">psykoda.constants.ipaddress module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.constants.html#module-psykoda.constants">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="psykoda.io.html">psykoda.io package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.io.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.io.labeled.html">psykoda.io.labeled package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.labeled.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.labeled.html#psykoda-io-labeled-file-module">psykoda.io.labeled.file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.labeled.html#psykoda-io-labeled-loader-module">psykoda.io.labeled.loader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.labeled.html#psykoda-io-labeled-saver-module">psykoda.io.labeled.saver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.labeled.html#module-psykoda.io.labeled">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.io.reader.html">psykoda.io.reader package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reader.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reader.html#psykoda-io-reader-base-module">psykoda.io.reader.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reader.html#psykoda-io-reader-snort-csv-module">psykoda.io.reader.snort_csv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reader.html#psykoda-io-reader-snort-syslog-module">psykoda.io.reader.snort_syslog module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reader.html#module-psykoda.io.reader">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.io.reporting.html">psykoda.io.reporting package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reporting.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reporting.html#psykoda-io-reporting-plot-module">psykoda.io.reporting.plot module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.reporting.html#module-psykoda.io.reporting">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.io.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.io.html#psykoda-io-internal-module">psykoda.io.internal module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.io.html#module-psykoda.io">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="psykoda.preprocess.html">psykoda.preprocess package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="psykoda.preprocess.html#module-psykoda.preprocess">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="psykoda-detection-module">
+<h2>psykoda.detection module<a class="headerlink" href="#psykoda-detection-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.detection"></span><p>Anomaly Detection and Explanation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.detection.</span></span><span class="sig-name descname"><span class="pre">DeepSAD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.detection.DeepSAD.Config" title="psykoda.detection.DeepSAD.Config"><span class="pre">psykoda.detection.DeepSAD.Config</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Deep SAD Semi-supervised Anomaly Detector.</p>
+<p>Translated from <a class="reference external" href="https://github.com/lukasruff/Deep-SAD-PyTorch">paper author Lukas Ruff’s PyTorch implementation</a>
+into TensorFlow.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>more detailed description, including comparison with PyTorch version.</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.dim_hidden">
+<span class="sig-name descname"><span class="pre">dim_hidden</span></span><a class="headerlink" href="#psykoda.detection.DeepSAD.dim_hidden" title="Permalink to this definition">¶</a></dt>
+<dd><p>from Config</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.eta">
+<span class="sig-name descname"><span class="pre">eta</span></span><a class="headerlink" href="#psykoda.detection.DeepSAD.eta" title="Permalink to this definition">¶</a></dt>
+<dd><p>from Config</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.lam">
+<span class="sig-name descname"><span class="pre">lam</span></span><a class="headerlink" href="#psykoda.detection.DeepSAD.lam" title="Permalink to this definition">¶</a></dt>
+<dd><p>from Config</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.path_pretrained_model">
+<span class="sig-name descname"><span class="pre">path_pretrained_model</span></span><a class="headerlink" href="#psykoda.detection.DeepSAD.path_pretrained_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>from Config</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.dim_input">
+<span class="sig-name descname"><span class="pre">dim_input</span></span><a class="headerlink" href="#psykoda.detection.DeepSAD.dim_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of features</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.history">
+<span class="sig-name descname"><span class="pre">history</span></span><a class="headerlink" href="#psykoda.detection.DeepSAD.history" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.detector">
+<span class="sig-name descname"><span class="pre">detector</span></span><a class="headerlink" href="#psykoda.detection.DeepSAD.detector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Original License</p>
+<p>MIT License</p>
+<p>Copyright (c) 2019 lukasruff</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.Config">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">dim_hidden:</span> <span class="pre">List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></em>, <em class="sig-param"><span class="pre">eta:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.0</span></em>, <em class="sig-param"><span class="pre">lam:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1e-06</span></em>, <em class="sig-param"><span class="pre">path_pretrained_model:</span> <span class="pre">Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for DeepSAD model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim_hidden</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – number of units in hidden layers</p></li>
+<li><p><strong>eta</strong> (<em>float</em>) – Deep SAD regularization hyperparameter eta (must be 0 &lt; eta)
+balancing the loss for labeled and unlabeled samples</p></li>
+<li><p><strong>lam</strong> (<em>float</em>) – regularization parameter on L2-norm of weights</p></li>
+<li><p><strong>path_pretrained_model</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – path to pretrained model (currently unused)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.Config.dim_hidden">
+<span class="sig-name descname"><span class="pre">dim_hidden</span></span><em class="property"><span class="pre">:</span> <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.Config.dim_hidden" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.Config.eta">
+<span class="sig-name descname"><span class="pre">eta</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">1.0</span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.Config.eta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.Config.lam">
+<span class="sig-name descname"><span class="pre">lam</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">1e-06</span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.Config.lam" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.Config.path_pretrained_model">
+<span class="sig-name descname"><span class="pre">path_pretrained_model</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.Config.path_pretrained_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.TrainConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">TrainConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epochs_pretrain</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs_train</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD.TrainConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD.TrainConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration of training process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epochs_pretrain</strong> (<em>int</em>) – epochs for pretraining (center initialization)</p></li>
+<li><p><strong>epochs_train</strong> (<em>int</em>) – epochs for training of detector</p></li>
+<li><p><strong>learning_rate</strong> (<em>float</em>) – learning rate of optimizer</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – batch size</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.TrainConfig.batch_size">
+<span class="sig-name descname"><span class="pre">batch_size</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><em class="property"> <span class="pre">=</span> <span class="pre">64</span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.TrainConfig.batch_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.TrainConfig.epochs_pretrain">
+<span class="sig-name descname"><span class="pre">epochs_pretrain</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><em class="property"> <span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.TrainConfig.epochs_pretrain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.TrainConfig.epochs_train">
+<span class="sig-name descname"><span class="pre">epochs_train</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><em class="property"> <span class="pre">=</span> <span class="pre">20</span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.TrainConfig.epochs_train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.TrainConfig.learning_rate">
+<span class="sig-name descname"><span class="pre">learning_rate</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">0.001</span></em><a class="headerlink" href="#psykoda.detection.DeepSAD.TrainConfig.learning_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.compute_anomaly_score">
+<span class="sig-name descname"><span class="pre">compute_anomaly_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">scipy.sparse.csr.csr_matrix</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD.compute_anomaly_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD.compute_anomaly_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute anomaly score</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – <dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, n_features)</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>scale</strong> – scale anomaly scores</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>score</strong> – anomaly scores</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, )</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.compute_embeddings">
+<span class="sig-name descname"><span class="pre">compute_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">scipy.sparse.csr.csr_matrix</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD.compute_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD.compute_embeddings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute input embeddings (latent representation/output of bottleneck layer)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> – <dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, n_features)</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>feature</strong> – embedding for each input</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, dim_embedding)</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.explain_anomaly">
+<span class="sig-name descname"><span class="pre">explain_anomaly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_anomaly</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">scipy.sparse.csr.csr_matrix</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_samples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">scipy.sparse.csr.csr_matrix</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shapvalue_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD.explain_anomaly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD.explain_anomaly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Shapley values (degree of contribution to anomaly) of each feature for anomaly samples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_anomaly</strong> – <p>feature matrix of anomaly samples</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_anomaly_samples, n_features)</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>background_samples</strong> – <p>background samples used to compute Shapley values,
+typically randomly sampled from training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_background_samples, n_features)</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>zero_correction</strong> (<em>bool</em>) – set Shapley value to zero if the corresponding feature is zero</p></li>
+<li><p><strong>shapvalue_scale</strong> (<em>bool</em>) – scale Shapley values into [1,Inf) (just for simplicity)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_anomaly_samples, n_features)</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Shapley values</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Uses <a class="reference external" href="https://github.com/slundberg/shap">SHAP by Scott Lundberg</a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.load_detector">
+<span class="sig-name descname"><span class="pre">load_detector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD.load_detector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD.load_detector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load pre-trained anomaly detector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.detection.DeepSAD.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">scipy.sparse.csr.csr_matrix</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.detection.DeepSAD.TrainConfig" title="psykoda.detection.DeepSAD.TrainConfig"><span class="pre">psykoda.detection.DeepSAD.TrainConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#DeepSAD.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.DeepSAD.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train anomaly detector (self.detector) with encoder (local variable).</p>
+<p>Set self.detector, self.dim_input and self.history.
+Save encoder to path_model and loss-epoch plot next to it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – <p>feature matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, n_features)</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>y</strong> – <dl class="simple">
+<dt>label</dt><dd><dl class="simple">
+<dt>0</dt><dd><p>not labeled as normal</p>
+</dd>
+<dt>1</dt><dd><p>labeled as normal</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, )</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>path_model</strong> – path ‘**.h5’ to save trained model</p></li>
+<li><p><strong>verbose</strong> – verbosity of logging/output</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.detection.dense_block">
+<span class="sig-prename descclassname"><span class="pre">psykoda.detection.</span></span><span class="sig-name descname"><span class="pre">dense_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tensorflow.python.framework.ops.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lam</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">tensorflow.python.keras.engine.base_layer.Layer</span><a class="reference internal" href="_modules/psykoda/detection.html#dense_block"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.dense_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic block (Dense-LeakyReLU layers) of multi layer perceptron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> – input of block</p></li>
+<li><p><strong>units</strong> – number of the units in the Dense layer</p></li>
+<li><p><strong>lam</strong> – regularization parameter on the weights in Dense layer</p></li>
+<li><p><strong>name</strong> – name of block; “_dense” and “_LeakyReLU” are appended for the layers</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dense-LeakyReLu layers</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>output</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.detection.detection_report">
+<span class="sig-prename descclassname"><span class="pre">psykoda.detection.</span></span><span class="sig-name descname"><span class="pre">detection_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">score_sorted</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shap_value_idx_sorted</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shap_top_k</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/detection.html#detection_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.detection_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>detection report</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>score_sorted</strong> – <p>anomaly score, sorted in descending order</p>
+<dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>(datetime_rounded, src_ip)</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>shap_value_idx_sorted</strong> – <p>Shapley values of anomaly samples, sorted in descending order by anomaly score</p>
+<dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>(datetime_rounded, src_ip), top-n of score_sorted</p>
+</dd>
+<dt class="field-even">columns</dt>
+<dd class="field-even"><p>features</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>shap_top_k</strong> – number of Shapley values to include per (datetime_rounded, src_ip)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>(datetime_rounded, src_ip)</p>
+</dd>
+<dt class="field-even">columns</dt>
+<dd class="field-even"><p>anomaly_score, shap_top_{i}, top_{i}_shap_value
+for 0 &lt; i &lt;= shap_top_k</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>detection_report</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.detection.generator_autoencoder_training">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.detection.</span></span><span class="sig-name descname"><span class="pre">generator_autoencoder_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">scipy.sparse.csr.csr_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#generator_autoencoder_training"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.generator_autoencoder_training" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorflow.python.keras.utils.data_utils.Sequence</span></code></p>
+<p>Sparse matrix as batches of dense arrays</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.detection.generator_autoencoder_training.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#generator_autoencoder_training.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.generator_autoencoder_training.on_epoch_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method called at the end of every epoch.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.detection.loss_sad">
+<span class="sig-prename descclassname"><span class="pre">psykoda.detection.</span></span><span class="sig-name descname"><span class="pre">loss_sad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/detection.html#loss_sad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.detection.loss_sad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loss function for Deep SAD</p>
+<p class="rubric">References</p>
+<p>[1] L. Ruff, R. A. Vandermeulen, N. Görnitz, A. Binder, E. Müller, K.-R. Müller, M. Kloft,
+“Deep Semi-Supervised Anomaly Detection”, <a class="reference external" href="https://arxiv.org/abs/1906.02694">https://arxiv.org/abs/1906.02694</a></p>
+</dd></dl>
+
+</section>
+<section id="psykoda-feature-extraction-module">
+<h2>psykoda.feature_extraction module<a class="headerlink" href="#psykoda-feature-extraction-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.feature_extraction"></span><p>Extract and manage feature values</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureExtractionConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.feature_extraction.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractionConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idf</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.feature_extraction.IDFConfig" title="psykoda.feature_extraction.IDFConfig"><span class="pre">psykoda.feature_extraction.IDFConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address_to_location</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureExtractionConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureExtractionConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Settings for feature_extraction.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureExtractionConfig.address_to_location">
+<span class="sig-name descname"><span class="pre">address_to_location</span></span><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.feature_extraction.FeatureExtractionConfig.address_to_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureExtractionConfig.idf">
+<span class="sig-name descname"><span class="pre">idf</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.feature_extraction.IDFConfig" title="psykoda.feature_extraction.IDFConfig"><span class="pre">psykoda.feature_extraction.IDFConfig</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#psykoda.feature_extraction.FeatureExtractionConfig.idf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureLabel">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.feature_extraction.</span></span><span class="sig-name descname"><span class="pre">FeatureLabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">scipy.sparse.csr.csr_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idf_sid</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idf_dport</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureLabel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Feature matrix with label values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feature</strong> – <p>scipy sparse feature matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, n_features)</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>index</strong> – <p>index of feature matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">length</dt>
+<dd class="field-odd"><p>n_samples</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>columns</strong> – <p>column of feature matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">length</dt>
+<dd class="field-odd"><p>n_features</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>label</strong> – <p>labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples, )</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>idf_sid</strong> – IDF (Inverse Document Frequency) for, and indexed by, sid</p></li>
+<li><p><strong>idf_dport</strong> – IDF for, and indexed by, dest_port</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureLabel.extract_nonzeros">
+<span class="sig-name descname"><span class="pre">extract_nonzeros</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureLabel.extract_nonzeros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureLabel.extract_nonzeros" title="Permalink to this definition">¶</a></dt>
+<dd><p>restructure feature matrix by excluding all zero rows/cols</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureLabel.extract_nonzeros_cols">
+<span class="sig-name descname"><span class="pre">extract_nonzeros_cols</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureLabel.extract_nonzeros_cols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureLabel.extract_nonzeros_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>exclude columns whose elements are all zeros</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureLabel.extract_nonzeros_rows">
+<span class="sig-name descname"><span class="pre">extract_nonzeros_rows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureLabel.extract_nonzeros_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureLabel.extract_nonzeros_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>exclude rows whose elements are all zeros</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureLabel.loc">
+<span class="sig-name descname"><span class="pre">loc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.series.Series</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureLabel.loc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureLabel.loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>correspond to DataFrame.loc[sample]
+e.g. sample = (pandas.Timestamp(“2021-04-01 14:00:00”), “10.1.1.1”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sample</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A series of features corresponding to sample.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureLabel.put_labels">
+<span class="sig-name descname"><span class="pre">put_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeled_samples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureLabel.put_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureLabel.put_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign label value 1 to known normal samples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>labeled_samples</strong> – <p>all-1 vector whose indexes are known normal</p>
+<dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>Index[datetime_rounded: datetime, src_ip: str]</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.FeatureLabel.split_train_test">
+<span class="sig-name descname"><span class="pre">split_train_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_to_training</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">scipy.sparse.csr.csr_matrix</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span> </span><span class="pre">scipy.sparse.csr.csr_matrix</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.indexes.base.Index</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#FeatureLabel.split_train_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.FeatureLabel.split_train_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>split feature matrix and return training and test sets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>date_to_training</strong> – samples (and their features) earlier than date_to_training are used for training.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>X_train</em> – feature matrix for training</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples_train, n_features)</p>
+</dd>
+</dl>
+</li>
+<li><p><em>y_train</em> – labels for training</p>
+<dl class="field-list simple">
+<dt class="field-odd">length</dt>
+<dd class="field-odd"><p>n_samples_train</p>
+</dd>
+</dl>
+</li>
+<li><p><em>X_test</em> – feature matrix for anomaly detection</p>
+<dl class="field-list simple">
+<dt class="field-odd">shape</dt>
+<dd class="field-odd"><p>(n_samples_test, n_features)</p>
+</dd>
+</dl>
+</li>
+<li><p><strong>index_test</strong> (<em>Index[datetime_rounded: datetime, src_ip: str]</em>) – row index for anomaly detection</p>
+<dl class="field-list simple">
+<dt class="field-odd">length</dt>
+<dd class="field-odd"><p>n_samples_test</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>date_to_training is compared against datetime_rounded.replace(hour=0).  Samples with equality are included in training set.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.IDFConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.feature_extraction.</span></span><span class="sig-name descname"><span class="pre">IDFConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_feature</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#IDFConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.IDFConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Settings for IDF (Inverse Document Frequency).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.IDFConfig.min_count">
+<span class="sig-name descname"><span class="pre">min_count</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#psykoda.feature_extraction.IDFConfig.min_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.IDFConfig.num_feature">
+<span class="sig-name descname"><span class="pre">num_feature</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#psykoda.feature_extraction.IDFConfig.num_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.calculate_idf">
+<span class="sig-prename descclassname"><span class="pre">psykoda.feature_extraction.</span></span><span class="sig-name descname"><span class="pre">calculate_idf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_idf_feature</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_count</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#calculate_idf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.calculate_idf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Inverse Document Frequency (IDF) of given column.</p>
+<p>Every unique index is considered a document.  A value of given column is considered to appear in the document if and only if there is at least one row with the index and column values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log</strong> – </p></li>
+<li><p><strong>column</strong> – name of column to calculate IDF values on.</p></li>
+<li><p><strong>num_idf_feature</strong> – (soft) maximum number of unique values of log[column] to keep IDF for.</p></li>
+<li><p><strong>min_count</strong> – minimum number of appearance of a log[column] value to calculate IDF for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>idf</em> – log(1 + raw_idf), indexed by column values
+e.g. Series([5.3, 3.2, 2.8], index=[22, 80, 3389], name=dest_port_idf)</p></li>
+<li><p><em>groups</em> – list of (column_value, matching_dataframe), indexed the same as idf</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.feature_extraction_all">
+<span class="sig-prename descclassname"><span class="pre">psykoda.feature_extraction.</span></span><span class="sig-name descname"><span class="pre">feature_extraction_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idf_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.feature_extraction.IDFConfig" title="psykoda.feature_extraction.IDFConfig"><span class="pre">psykoda.feature_extraction.IDFConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iptable</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.feature_extraction.FeatureLabel" title="psykoda.feature_extraction.FeatureLabel"><span class="pre">psykoda.feature_extraction.FeatureLabel</span></a><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#feature_extraction_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.feature_extraction_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute feature matrix from preprocessed log for each sample</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log</strong> – <p>data to construct feature matrix from.</p>
+<dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>(datetime_rounded, src_ip) (exact match)</p>
+</dd>
+<dt class="field-even">assumed</dt>
+<dd class="field-even"><p>(dest_ip, dest_port, sid, src_port) (included)</p>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>idf_config</strong> – <p>Configuration for IDF</p>
+<dl class="field-list simple">
+<dt class="field-odd">key</dt>
+<dd class="field-odd"><p>column</p>
+</dd>
+<dt class="field-even">value</dt>
+<dd class="field-even"><p>configuration</p>
+</dd>
+</dl>
+<p>refer to calculate_idf and its unittests.</p>
+</p></li>
+<li><p><strong>iptable</strong> – <p>IP locations definition table</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>example</p>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.find_ip_location">
+<span class="sig-prename descclassname"><span class="pre">psykoda.feature_extraction.</span></span><span class="sig-name descname"><span class="pre">find_ip_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iptable</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.series.Series</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#find_ip_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.find_ip_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find location information for IP addresses</p>
+<p>Current implementation returns first matches, but this is not part of specification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_list</strong> – </p></li>
+<li><p><strong>iptable</strong> – <p>location information table with at least two columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">IP_TABLE_SUBNET</dt>
+<dd class="field-odd"><p>network address in CIDR format</p>
+</dd>
+<dt class="field-even">IP_TABLE_LOCATION</dt>
+<dd class="field-even"><p>location name</p>
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>location</strong> – location information</p>
+<dl class="field-list simple">
+<dt class="field-odd">index</dt>
+<dd class="field-odd"><p>ip_address: str</p>
+</dd>
+<dt class="field-even">value</dt>
+<dd class="field-even"><p>location_name: str</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.feature_extraction.location_matcher">
+<span class="sig-prename descclassname"><span class="pre">psykoda.feature_extraction.</span></span><span class="sig-name descname"><span class="pre">location_matcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subnets</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locations</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/feature_extraction.html#location_matcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.feature_extraction.location_matcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a function that returns location when you input ip address.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subnets</strong> – Subnet addresses in CIDR format.</p></li>
+<li><p><strong>locations</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) – Location names for each subnet address.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function that returns location when you input ip address.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matcher</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="psykoda-utils-module">
+<h2>psykoda.utils module<a class="headerlink" href="#psykoda-utils-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.utils"></span><p>Miscellaneous utilities</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.utils.DateRange">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">DateRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_inclusive</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_exclusive</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_inclusive</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_exclusive</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/utils.html#DateRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.DateRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.daterange2list">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">daterange2list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_inclusive</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_inclusive</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/utils.html#daterange2list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.daterange2list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct list from range of dates.</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Replace with date range object with iterator?</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.dmap">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">dmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.K</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.R</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.K</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.K</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.R</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/utils.html#dmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.dmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>map over dict items.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.first">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.F</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.S</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">psykoda.utils.F</span><a class="reference internal" href="_modules/psykoda/utils.html#first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.first" title="Permalink to this definition">¶</a></dt>
+<dd><p>First item of 2-tuple.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.flip">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">flip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.F</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.S</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.S</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.F</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/utils.html#flip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.flip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap first and second items of 2-tuple.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.get_series">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">get_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.indexes.base.Index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.series.Series</span><a class="reference internal" href="_modules/psykoda/utils.html#get_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.get_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>get_velel_values as Series, indexed by itself.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.index_from_sorted">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">index_from_sorted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ls</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/utils.html#index_from_sorted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.index_from_sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimal perfect (non-cryptographic) hash from unique values.</p>
+<p>Works for unique unsorted list too, but named as sorted.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.index_from_unsorted">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">index_from_unsorted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">it</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/utils.html#index_from_unsorted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.index_from_unsorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimal perfect (non-cryptographic) hash from values.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.load_json">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">load_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="reference internal" href="_modules/psykoda/utils.html#load_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.load_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load object from .json file.</p>
+<p>json.load(object_hook) is used to construct pandas.Timestamp from
+object like {type: datetime, value: 2021-04-01}.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.replace_match">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">replace_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">psykoda.utils.V</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">psykoda.utils.V</span><a class="reference internal" href="_modules/psykoda/utils.html#replace_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.replace_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace value, if match is found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> – replacements</p></li>
+<li><p><strong>v</strong> – replacee</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.save_json">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/utils.html#save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.save_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save object to .json file.</p>
+<p>json.dump(default) is used to serialize datetime as
+object like {type: datetime, value: 2021-04-01}.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.second">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">second</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.F</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.S</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">psykoda.utils.S</span><a class="reference internal" href="_modules/psykoda/utils.html#second"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.second" title="Permalink to this definition">¶</a></dt>
+<dd><p>Second item of 2-tuple.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.utils.vmap">
+<span class="sig-prename descclassname"><span class="pre">psykoda.utils.</span></span><span class="sig-name descname"><span class="pre">vmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.R</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.K</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.V</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">psykoda.utils.K</span><span class="p"><span class="pre">,</span> </span><span class="pre">psykoda.utils.R</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/utils.html#vmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.utils.vmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>map over dict values.</p>
+</dd></dl>
+
+</section>
+<section id="module-psykoda">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-psykoda" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">psykoda package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.cli.html">psykoda.cli package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.constants.html">psykoda.constants package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.io.html">psykoda.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.preprocess.html">psykoda.preprocess package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#psykoda-detection-module">psykoda.detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#psykoda-feature-extraction-module">psykoda.feature_extraction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#psykoda-utils-module">psykoda.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-psykoda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">src</a></li>
+      <li>Next: <a href="psykoda.cli.html" title="next chapter">psykoda.cli package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/psykoda.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

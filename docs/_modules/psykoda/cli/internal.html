@@ -1,0 +1,996 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>psykoda.cli.internal &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for psykoda.cli.internal</h1><div class="highlight"><pre>
+<span></span><span class="c1">#%load_ext autoreload</span>
+<span class="c1">#%autoreload 2</span>
+
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse.csr</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+
+<span class="kn">from</span> <span class="nn">psykoda</span> <span class="kn">import</span> <span class="n">detection</span><span class="p">,</span> <span class="n">feature_extraction</span><span class="p">,</span> <span class="n">preprocess</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">psykoda.constants</span> <span class="kn">import</span> <span class="n">COMMANDLINE_DATE_FORMAT</span><span class="p">,</span> <span class="n">col</span>
+<span class="kn">from</span> <span class="nn">psykoda.io</span> <span class="kn">import</span> <span class="n">labeled</span><span class="p">,</span> <span class="n">reporting</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">to_stderr</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;_log_err&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+
+<span class="n">FILENAME_WEIGHT</span> <span class="o">=</span> <span class="s2">&quot;best_weight.h5&quot;</span>
+<span class="n">FILENAME_IDF_SID</span> <span class="o">=</span> <span class="s2">&quot;idf_sid.csv&quot;</span>
+<span class="n">FILENAME_IDF_DPORT</span> <span class="o">=</span> <span class="s2">&quot;idf_dport.csv&quot;</span>
+<span class="n">FILENAME_PLOT_DETECTION</span> <span class="o">=</span> <span class="s2">&quot;plot_detection.png&quot;</span>
+<span class="n">FILENAME_STATS</span> <span class="o">=</span> <span class="s2">&quot;stats.json&quot;</span>
+<span class="n">FILENAME_REPORT</span> <span class="o">=</span> <span class="s2">&quot;report.csv&quot;</span>
+<span class="n">FILENAME_FEATURE_MATRIX</span> <span class="o">=</span> <span class="s2">&quot;feature_matrix.csv&quot;</span>
+
+
+<div class="viewcode-block" id="configure_logging"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.configure_logging">[docs]</a><span class="k">def</span> <span class="nf">configure_logging</span><span class="p">(</span><span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configure execution log settings.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    debug</span>
+<span class="sd">        Whether to log &quot;debug levels&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">PATH_LOG</span> <span class="o">=</span> <span class="s2">&quot;./log/log_&quot;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.log&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">PATH_LOG</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">log_level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">log_level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+
+    <span class="c1"># utilities</span>
+    <span class="n">stderr_filter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">record</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s2">&quot;_log_err&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># app config</span>
+    <span class="n">stderr_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">stderr_handler</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="n">stderr_filter</span><span class="p">)</span>
+    <span class="n">stderr_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">stderr_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="n">handlers</span> <span class="o">=</span> <span class="p">[</span><span class="n">stderr_handler</span><span class="p">]</span>
+
+    <span class="n">logfile_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">PATH_LOG</span><span class="p">)</span>
+    <span class="n">logfile_handler</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">logfile_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)-8s</span><span class="s2"> [</span><span class="si">%(module)s</span><span class="s2"> # </span><span class="si">%(funcName)s</span><span class="s2"> line </span><span class="si">%(lineno)d</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">logfile_handler</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">handlers</span><span class="o">=</span><span class="n">handlers</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Incomplete_Args_Exception"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.Incomplete_Args_Exception">[docs]</a><span class="k">class</span> <span class="nc">Incomplete_Args_Exception</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="n">load_config</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_json</span>
+
+
+<div class="viewcode-block" id="OutputConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.OutputConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">OutputConfig</span><span class="p">:</span>
+    <span class="nb">dir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">share_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">subdir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PreprocessConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.PreprocessConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">PreprocessConfig</span><span class="p">:</span>
+    <span class="n">exclude_lists</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">screening</span><span class="p">:</span> <span class="n">preprocess</span><span class="o">.</span><span class="n">ScreeningConfig</span></div>
+
+
+<div class="viewcode-block" id="InputConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.InputConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">InputConfig</span><span class="p">:</span>
+    <span class="nb">dir</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="LoadPreviousConfigItem"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.LoadPreviousConfigItem">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">LoadPreviousConfigItem</span><span class="p">:</span>
+    <span class="nb">list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">ndate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">730</span></div>
+
+
+<div class="viewcode-block" id="LoadPreviousConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.LoadPreviousConfig">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">LoadPreviousConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log loading settings.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list</span>
+<span class="sd">        path to CSV file in which labeled IP addresses are listed</span>
+<span class="sd">    ndate</span>
+<span class="sd">        time range for labeled IP addresses, in days</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">known_normal</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LoadPreviousConfigItem</span><span class="p">]</span>
+    <span class="n">known_anomaly</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LoadPreviousConfigItem</span><span class="p">]</span>
+    <span class="n">unknown</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LoadPreviousConfigItem</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PreviousConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.PreviousConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">PreviousConfig</span><span class="p">:</span>
+    <span class="n">load</span><span class="p">:</span> <span class="n">LoadPreviousConfig</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">Config</span></div>
+
+
+<div class="viewcode-block" id="IOConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.IOConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">IOConfig</span><span class="p">:</span>
+    <span class="nb">input</span><span class="p">:</span> <span class="n">InputConfig</span>
+    <span class="n">previous</span><span class="p">:</span> <span class="n">PreviousConfig</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">OutputConfig</span></div>
+
+
+<div class="viewcode-block" id="Service"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.Service">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Service</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Service definition: set of destination port numbers</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; all = Service()</span>
+<span class="sd">    &gt;&gt;&gt; ssh = Service(include=[22])</span>
+<span class="sd">    &gt;&gt;&gt; all_but_ssh = Service(exclude=[22])</span>
+<span class="sd">    &gt;&gt;&gt; ssh_or_https = Service(include=[22, 443])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">include</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+    <span class="n">exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span></div>
+
+
+<div class="viewcode-block" id="Subnet"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.Subnet">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Subnet</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Subnet configuration: set of CIDR-formatted IP addresses with services to analyze</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; private_A = Subnet([&quot;10.0.0.0/8&quot;], get_names_of_services_from_config())</span>
+<span class="sd">    &gt;&gt;&gt; private = Subnet([&quot;private-A&quot;, &quot;private-B&quot;, &quot;private-C&quot;], get_names_of_services_from_config())  # these constants are available for convenience and readability</span>
+<span class="sd">    &gt;&gt;&gt; my_network = Subnet([&quot;10.0.0.0/16&quot;, &quot;10.1.1.0/24&quot;], get_names_of_services_from_config())</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cidrs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">services</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DetectionUnitConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.DetectionUnitConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">DetectionUnitConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Detection unit configuration</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    services</span>
+<span class="sd">        map from names of service to service definitions</span>
+<span class="sd">    subnets</span>
+<span class="sd">        map from names of subnet to subnet configurations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">services</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Service</span><span class="p">]</span>
+    <span class="n">subnets</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Subnet</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TargetPeriod"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.TargetPeriod">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TargetPeriod</span><span class="p">:</span>
+    <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span></div>
+
+
+<div class="viewcode-block" id="ArgumentsConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.ArgumentsConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ArgumentsConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Arguments modification configuration</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target_period:</span>
+<span class="sd">        default target period used to determine date_from and date_to values if missing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">target_period</span><span class="p">:</span> <span class="n">TargetPeriod</span></div>
+
+
+<div class="viewcode-block" id="set_default_date_detect"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.set_default_date_detect">[docs]</a><span class="k">def</span> <span class="nf">set_default_date_detect</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ArgumentsConfig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configure training from/to dates according to args and config.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args</span>
+<span class="sd">        Command line args.</span>
+<span class="sd">    config</span>
+<span class="sd">        Settings for arguments.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    args</span>
+<span class="sd">        Command line args with training from/to dates added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">date_time_today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">date_from</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">date_from</span> <span class="o">=</span> <span class="n">date_time_today</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">target_period</span><span class="o">.</span><span class="n">days</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">date_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">date_to</span> <span class="o">=</span> <span class="n">date_time_today</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">args</span><span class="o">.</span><span class="n">date_from_training</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">date_from</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">period_train</span><span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">date_to_training</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">date_from</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">args</span></div>
+
+
+<div class="viewcode-block" id="SkipDetectionConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.SkipDetectionConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SkipDetectionConfig</span><span class="p">:</span>
+    <span class="n">train</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">test</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="ThresholdConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.ThresholdConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ThresholdConfig</span><span class="p">:</span>
+    <span class="n">num_anomaly</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">min_score</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="AnomalyDetectionConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.AnomalyDetectionConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AnomalyDetectionConfig</span><span class="p">:</span>
+    <span class="n">required_srcip</span><span class="p">:</span> <span class="n">SkipDetectionConfig</span>
+    <span class="n">deepsad</span><span class="p">:</span> <span class="n">detection</span><span class="o">.</span><span class="n">DeepSAD</span><span class="o">.</span><span class="n">Config</span>
+    <span class="n">train</span><span class="p">:</span> <span class="n">detection</span><span class="o">.</span><span class="n">DeepSAD</span><span class="o">.</span><span class="n">TrainConfig</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="n">ThresholdConfig</span></div>
+
+
+<div class="viewcode-block" id="DetectConfig"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.DetectConfig">[docs]</a><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">DetectConfig</span><span class="p">:</span>
+    <span class="n">arguments</span><span class="p">:</span> <span class="n">ArgumentsConfig</span>
+    <span class="n">detection_units</span><span class="p">:</span> <span class="n">DetectionUnitConfig</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">IOConfig</span>
+    <span class="n">preprocess</span><span class="p">:</span> <span class="n">PreprocessConfig</span>
+    <span class="n">feature_extraction</span><span class="p">:</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">FeatureExtractionConfig</span>
+    <span class="n">anomaly_detection</span><span class="p">:</span> <span class="n">AnomalyDetectionConfig</span></div>
+
+
+<div class="viewcode-block" id="main_detection"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.main_detection">[docs]</a><span class="k">def</span> <span class="nf">main_detection</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">DetectConfig</span><span class="p">,</span> <span class="n">log</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    args</span>
+<span class="sd">    config</span>
+<span class="sd">    log</span>
+<span class="sd">        :index:</span>
+<span class="sd">        :columns:</span>
+<span class="sd">    label</span>
+<span class="sd">        filled with 1</span>
+<span class="sd">        :index:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dir_report</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">subnet</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">service</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">feature_label</span> <span class="o">=</span> <span class="n">main_detection_prepare_data</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">feature_extraction</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">label</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">feature_label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">feature_label</span><span class="o">.</span><span class="n">idf_sid</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">FILENAME_IDF_SID</span><span class="p">))</span>
+    <span class="n">feature_label</span><span class="o">.</span><span class="n">idf_dport</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">FILENAME_IDF_DPORT</span><span class="p">))</span>
+    <span class="n">train_test_splitted</span><span class="p">,</span> <span class="n">x_train_labeled</span> <span class="o">=</span> <span class="n">main_detection_after_prepare_data</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">feature_label</span>
+    <span class="p">)</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">main_detection_skip_or_detect</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">,</span>
+        <span class="n">log</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">dir_report</span><span class="p">,</span>
+        <span class="n">feature_label</span><span class="p">,</span>
+        <span class="n">train_test_splitted</span><span class="p">,</span>
+        <span class="n">x_train_labeled</span><span class="p">,</span>
+        <span class="n">anomaly_detection_config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">anomaly_detection</span><span class="p">,</span>
+        <span class="n">previous_config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">previous</span><span class="o">.</span><span class="n">log</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">FILENAME_STATS</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="main_detection_prepare_data"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.main_detection_prepare_data">[docs]</a><span class="k">def</span> <span class="nf">main_detection_prepare_data</span><span class="p">(</span>
+    <span class="n">args</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">FeatureExtractionConfig</span><span class="p">,</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">feature_extraction</span><span class="o">.</span><span class="n">FeatureLabel</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Feature extraction&quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;start detect on subnet </span><span class="si">%s</span><span class="s2"> and service </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">subnet</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">service</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;skip analysis; no logs exist&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;extracting features&quot;</span><span class="p">)</span>
+    <span class="n">feature_label</span> <span class="o">=</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">feature_extraction_all</span><span class="p">(</span>
+        <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
+        <span class="n">iptable</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">address_to_location</span><span class="p">),</span>
+        <span class="n">idf_config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">idf</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">feature_label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;skip analysis; feature matrix is None&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">feature_label</span><span class="o">.</span><span class="n">extract_nonzeros</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">label</span><span class="o">.</span><span class="n">index</span> <span class="o">&amp;</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+    <span class="n">feature_label</span><span class="o">.</span><span class="n">put_labels</span><span class="p">(</span><span class="n">labeled_samples</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="n">feature_label</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">feature</span> <span class="o">/</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">feature_label</span></div>
+
+
+<div class="viewcode-block" id="main_detection_after_prepare_data"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.main_detection_after_prepare_data">[docs]</a><span class="k">def</span> <span class="nf">main_detection_after_prepare_data</span><span class="p">(</span>
+    <span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">feature_label</span><span class="p">:</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">FeatureLabel</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Split data and construct labeled training feature.&quot;&quot;&quot;</span>
+    <span class="n">train_test_splitted</span> <span class="o">=</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">date_to_training</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;feature_label.index: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">label.index: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">idx_labeled</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">label</span><span class="o">.</span><span class="n">index</span>
+        <span class="k">if</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">index</span>
+    <span class="p">]</span>
+    <span class="n">x_train_labeled</span> <span class="o">=</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">feature</span><span class="p">[</span><span class="n">idx_labeled</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">train_test_splitted</span><span class="p">,</span> <span class="n">x_train_labeled</span></div>
+
+
+<div class="viewcode-block" id="main_detection_skip_or_detect"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.main_detection_skip_or_detect">[docs]</a><span class="k">def</span> <span class="nf">main_detection_skip_or_detect</span><span class="p">(</span>
+    <span class="n">args</span><span class="p">,</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+    <span class="n">dir_report</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">feature_label</span><span class="p">:</span> <span class="n">feature_extraction</span><span class="o">.</span><span class="n">FeatureLabel</span><span class="p">,</span>
+    <span class="n">train_test_splitted</span><span class="p">,</span>
+    <span class="n">x_train_labeled</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">,</span>
+    <span class="n">anomaly_detection_config</span><span class="p">:</span> <span class="n">AnomalyDetectionConfig</span><span class="p">,</span>
+    <span class="n">previous_config</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">Config</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Anomaly detection and output the result.&quot;&quot;&quot;</span>
+    <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">index_test</span> <span class="o">=</span> <span class="n">train_test_splitted</span>
+
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;subnet&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">subnet</span><span class="p">,</span>
+        <span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
+        <span class="s2">&quot;date_from&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">date_from</span><span class="p">,</span>
+        <span class="s2">&quot;date_to&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">date_to</span><span class="p">,</span>
+        <span class="s2">&quot;num_samples_st_detection&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_test</span><span class="p">),</span>
+        <span class="s2">&quot;num_samples_training&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">),</span>
+        <span class="s2">&quot;date_from_training&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">date_from_training</span><span class="p">,</span>
+        <span class="s2">&quot;date_to_training&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">date_to_training</span><span class="p">,</span>
+        <span class="s2">&quot;num_samples_labeled&quot;</span><span class="p">:</span> <span class="n">x_train_labeled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s2">&quot;samples_labeled&quot;</span><span class="p">:</span> <span class="n">label</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+    <span class="p">}</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;stats: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stats</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">required_srcip</span><span class="o">.</span><span class="n">train</span><span class="p">:</span>
+        <span class="n">skip_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;#src_ip[train] = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> &lt; config.anomaly_detection.required_srcip.train = </span><span class="si">{</span><span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">required_srcip</span><span class="o">.</span><span class="n">train</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">skip_message</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;skipped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">skip_message</span>
+        <span class="k">return</span> <span class="n">stats</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_test</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">required_srcip</span><span class="o">.</span><span class="n">test</span><span class="p">:</span>
+        <span class="n">skip_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;#src_ip[test] = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">index_test</span><span class="p">)</span><span class="si">}</span><span class="s2"> &lt; config.anomaly_detection.required_srcip.test = </span><span class="si">{</span><span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">required_srcip</span><span class="o">.</span><span class="n">test</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">skip_message</span><span class="p">)</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;skipped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">skip_message</span>
+        <span class="k">return</span> <span class="n">stats</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;training detector&quot;</span><span class="p">)</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">level</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">detector</span> <span class="o">=</span> <span class="n">detection</span><span class="o">.</span><span class="n">DeepSAD</span><span class="p">(</span><span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">deepsad</span><span class="p">)</span>
+    <span class="n">detector</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">x_train</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+        <span class="n">path_model</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">FILENAME_WEIGHT</span><span class="p">),</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">train</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;outputting detection reports&quot;</span><span class="p">)</span>
+    <span class="n">anomaly_score</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">compute_anomaly_score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">num_anomaly</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+        <span class="nb">sum</span><span class="p">(</span><span class="n">anomaly_score</span> <span class="o">&gt;</span> <span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">threshold</span><span class="o">.</span><span class="n">min_score</span><span class="p">),</span>
+        <span class="n">anomaly_detection_config</span><span class="o">.</span><span class="n">threshold</span><span class="o">.</span><span class="n">num_anomaly</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">idx_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">anomaly_score</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">idx_anomaly</span> <span class="o">=</span> <span class="n">idx_sorted</span><span class="p">[:</span><span class="n">num_anomaly</span><span class="p">]</span>
+    <span class="n">anomaly_score_sorted</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="n">anomaly_score</span><span class="p">[</span><span class="n">idx_sorted</span><span class="p">],</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">index_test</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx_sorted</span><span class="p">],</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">DATETIME_ROUNDED</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;anomaly_score&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">x_test_embeddings</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">compute_embeddings</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+    <span class="n">x_train_labeled_embeddings</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">compute_embeddings</span><span class="p">(</span><span class="n">x_train_labeled</span><span class="p">)</span>
+
+    <span class="n">shap_value_idx_sorted</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">explain_anomaly</span><span class="p">(</span>
+        <span class="n">x_test</span><span class="p">[</span><span class="n">idx_anomaly</span><span class="p">],</span> <span class="n">background_samples</span><span class="o">=</span><span class="n">x_train</span>
+    <span class="p">)</span>
+    <span class="n">shap_value_idx_sorted</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">shap_value_idx_sorted</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">index_test</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx_anomaly</span><span class="p">],</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">DATETIME_ROUNDED</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">feature_label</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">output_result</span><span class="p">(</span>
+        <span class="n">args</span><span class="p">,</span>
+        <span class="n">log</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">dir_report</span><span class="p">,</span>
+        <span class="n">x_train_labeled_embeddings</span><span class="o">=</span><span class="n">x_train_labeled_embeddings</span><span class="p">,</span>
+        <span class="n">x_test_embeddings</span><span class="o">=</span><span class="n">x_test_embeddings</span><span class="p">,</span>
+        <span class="n">idx_anomaly</span><span class="o">=</span><span class="n">idx_anomaly</span><span class="p">,</span>
+        <span class="n">shap_value_idx_sorted</span><span class="o">=</span><span class="n">shap_value_idx_sorted</span><span class="p">,</span>
+        <span class="n">anomaly_score_sorted</span><span class="o">=</span><span class="n">anomaly_score_sorted</span><span class="p">,</span>
+        <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
+        <span class="n">previous_config</span><span class="o">=</span><span class="n">previous_config</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">csr_matrix</span><span class="p">):</span>
+            <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index_test</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">feature_label</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx_sorted</span><span class="p">]</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">FILENAME_FEATURE_MATRIX</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">stats</span></div>
+
+
+<div class="viewcode-block" id="output_result"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.output_result">[docs]</a><span class="k">def</span> <span class="nf">output_result</span><span class="p">(</span>
+    <span class="n">args</span><span class="p">,</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+    <span class="n">dir_report</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">x_train_labeled_embeddings</span><span class="p">,</span>
+    <span class="n">x_test_embeddings</span><span class="p">,</span>
+    <span class="n">idx_anomaly</span><span class="p">,</span>
+    <span class="n">shap_value_idx_sorted</span><span class="p">,</span>
+    <span class="n">anomaly_score_sorted</span><span class="p">,</span>
+    <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">previous_config</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">Config</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot the detection result and output the report.&quot;&quot;&quot;</span>
+
+    <span class="n">reporting</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_detection</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">x_test_embeddings</span><span class="p">,</span>
+        <span class="n">idx_anomaly</span><span class="o">=</span><span class="n">idx_anomaly</span><span class="p">,</span>
+        <span class="n">name_anomaly</span><span class="o">=</span><span class="n">shap_value_idx_sorted</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="n">X_labeled</span><span class="o">=</span><span class="n">x_train_labeled_embeddings</span><span class="p">,</span>
+        <span class="n">name_labeled</span><span class="o">=</span><span class="n">label</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="n">path_saved</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">FILENAME_PLOT_DETECTION</span><span class="p">),</span>
+        <span class="n">no_plot</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">no_plot</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">detection</span><span class="o">.</span><span class="n">detection_report</span><span class="p">(</span>
+        <span class="n">anomaly_score_sorted</span><span class="p">,</span>
+        <span class="n">shap_value_idx_sorted</span><span class="p">,</span>
+        <span class="n">shap_top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_report</span><span class="p">,</span> <span class="n">FILENAME_REPORT</span><span class="p">))</span>
+
+    <span class="n">labeled</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">previous_config</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">save_previous_log</span><span class="p">(</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
+        <span class="n">entries</span><span class="o">=</span><span class="n">shap_value_idx_sorted</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;num_anomaly&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx_anomaly</span><span class="p">)</span>
+    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;name_anomaly&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shap_value_idx_sorted</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;successfully finish detection on subnet </span><span class="si">%s</span><span class="s2"> and service </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">subnet</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">service</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">stats</span></div>
+
+
+<div class="viewcode-block" id="report_all"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.report_all">[docs]</a><span class="k">def</span> <span class="nf">report_all</span><span class="p">(</span><span class="n">path_list_stats</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">path_save</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Summarizing all reports and save it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path_list_stats : list</span>
+<span class="sd">        List of stats file paths</span>
+<span class="sd">    path_save : str</span>
+<span class="sd">        File path where the report will be saved</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path_save</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;summarizing all reports...&quot;</span><span class="p">)</span>
+    <span class="n">results_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">[],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;datetime_rounded&quot;</span><span class="p">,</span> <span class="s2">&quot;src_ip&quot;</span><span class="p">,</span> <span class="s2">&quot;subnet&quot;</span><span class="p">,</span> <span class="s2">&quot;service&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">path_list_stats</span><span class="p">:</span>
+        <span class="c1"># Load stats</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">subnet</span><span class="p">,</span> <span class="n">service</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;subnet&quot;</span><span class="p">],</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">anomaly_list</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;name_anomaly&quot;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">anomaly_list</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Load report</span>
+        <span class="n">path_report</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">FILENAME_STATS</span><span class="p">,</span> <span class="n">FILENAME_REPORT</span><span class="p">)</span>
+        <span class="n">report</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_report</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># Store anomalies in the DataFrame</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">src_ip</span><span class="p">)</span> <span class="ow">in</span> <span class="n">anomaly_list</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">((</span><span class="n">dt</span><span class="p">,</span> <span class="n">src_ip</span><span class="p">))</span>
+            <span class="n">results_pd</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="p">,</span> <span class="n">src_ip</span><span class="p">,</span> <span class="n">subnet</span><span class="p">,</span> <span class="n">service</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">results_shaps</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([],</span> <span class="n">columns</span><span class="o">=</span><span class="n">report</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+            <span class="n">results_shaps</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">dt</span><span class="p">,</span> <span class="n">src_ip</span><span class="p">)]</span>
+
+            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">anomaly_found</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">anomaly_found</span><span class="p">:</span>
+        <span class="c1"># Anomaly found</span>
+        <span class="n">results_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">results_pd</span><span class="p">,</span> <span class="n">results_shaps</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">results_pd</span> <span class="o">=</span> <span class="n">results_pd</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;anomaly_score&quot;</span><span class="p">,</span> <span class="s2">&quot;datetime_rounded&quot;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">results_pd</span><span class="p">[</span><span class="s2">&quot;src_ip&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="n">results_pd_group</span> <span class="o">=</span> <span class="n">results_pd</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;src_ip&quot;</span><span class="p">)</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([])</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">ret</span><span class="p">,</span> <span class="n">results_pd_group</span><span class="o">.</span><span class="n">get_group</span><span class="p">(</span><span class="n">key</span><span class="p">)])</span>
+
+        <span class="n">ret</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_save</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Anomaly not found</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s2">&quot;no anomaly found&quot;</span><span class="p">]])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_save</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[RESULT]&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detection summary file: </span><span class="si">{</span><span class="n">path_save</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">)</span>
+    <span class="n">num_anomaly_ipaddr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="k">if</span> <span class="n">anomaly_found</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Number of unique anomaly IP addresses: </span><span class="si">{</span><span class="n">num_anomaly_ipaddr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">anomaly_found</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">src_ip</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">max_anomaly_score</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="n">results_pd</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;src_ip == @src_ip&quot;</span><span class="p">)[</span><span class="s2">&quot;anomaly_score&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">src_ip</span><span class="si">}</span><span class="s2"> (max anomaly score: </span><span class="si">{</span><span class="n">max_anomaly_score</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="report_transfer"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.report_transfer">[docs]</a><span class="k">def</span> <span class="nf">report_transfer</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dir_to</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copy Report Files to the Directory</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        File path of the report to copy.</span>
+<span class="sd">    dir_to : str</span>
+<span class="sd">        Directory Path of destination directory.</span>
+<span class="sd">        If you specify a directory that does not exist, a new directory is created.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Destination directory not specified.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        Report file does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Argument checking</span>
+    <span class="k">if</span> <span class="n">dir_to</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Destination directory not specified.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Report file does not exist.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Copy a report to a directory</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dir_to</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dir_to</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;failed transfer report </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">, the error message: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">dir_to</span><span class="p">,</span> <span class="n">ex</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ex</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;successfully transfered report </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">dir_to</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="main_preproc_and_detection"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.main_preproc_and_detection">[docs]</a><span class="k">def</span> <span class="nf">main_preproc_and_detection</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">DetectConfig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Data preprocessing and anomaly detection.&quot;&quot;&quot;</span>
+    <span class="n">log_all</span> <span class="o">=</span> <span class="n">load_preprocess_log</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+    <span class="c1"># Detecting for each subnet</span>
+    <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">detection_units</span><span class="o">.</span><span class="n">subnets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">service_name</span> <span class="ow">in</span> <span class="n">subnet</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">services</span><span class="p">:</span>
+            <span class="n">detect_per_unit</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">log_all</span><span class="p">,</span> <span class="n">subnet</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># Reporting</span>
+    <span class="n">path_report_all</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="n">FILENAME_REPORT</span><span class="p">)</span>
+    <span class="n">path_list_stats</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">subdir</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="n">FILENAME_STATS</span><span class="p">),</span>
+        <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">report_all</span><span class="p">(</span><span class="n">path_list_stats</span><span class="p">,</span> <span class="n">path_save</span><span class="o">=</span><span class="n">path_report_all</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">share_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">report_transfer</span><span class="p">(</span>
+            <span class="n">path_report_all</span><span class="p">,</span>
+            <span class="n">dir_to</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">share_dir</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">date_from</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">COMMANDLINE_DATE_FORMAT</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;__&quot;</span>
+                <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">date_to</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">COMMANDLINE_DATE_FORMAT</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_preprocess_log"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.load_preprocess_log">[docs]</a><span class="k">def</span> <span class="nf">load_preprocess_log</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">DetectConfig</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load and preprocess log.</span>
+
+<span class="sd">    Warnings</span>
+<span class="sd">    --------</span>
+<span class="sd">    Sets config.io.output.subdir</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Loading logs</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;loading logs during the period from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">date_from_training</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">date_to</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">.</span><span class="n">date_from</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">COMMANDLINE_DATE_FORMAT</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot;__&quot;</span>
+        <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">date_to</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">COMMANDLINE_DATE_FORMAT</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">log_all</span> <span class="o">=</span> <span class="n">load_log</span><span class="p">(</span>
+        <span class="n">dir_IDS_log</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span>
+        <span class="n">date_from</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">date_from_training</span><span class="p">,</span>
+        <span class="n">date_to</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">date_to</span><span class="p">,</span>
+        <span class="n">nrows_read</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">nrows_read</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">log_all</span> <span class="o">=</span> <span class="n">apply_exclude_lists</span><span class="p">(</span><span class="n">log_all</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">preprocess</span><span class="o">.</span><span class="n">exclude_lists</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[TARGET INFO]&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Number of log entries loaded: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">log_all</span><span class="p">),</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Number of unique source IP addresses: </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">log_all</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()[</span><span class="s2">&quot;src_ip&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span>
+        <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Preprocessing logs</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;preprocessing logs&quot;</span><span class="p">)</span>
+    <span class="n">log_all</span> <span class="o">=</span> <span class="n">preprocess</span><span class="o">.</span><span class="n">screening_numlog</span><span class="p">(</span><span class="n">log_all</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">preprocess</span><span class="o">.</span><span class="n">screening</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">log_all</span></div>
+
+
+<div class="viewcode-block" id="detect_per_unit"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.detect_per_unit">[docs]</a><span class="k">def</span> <span class="nf">detect_per_unit</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">DetectConfig</span><span class="p">,</span>
+    <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">log_all</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">subnet</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Subnet</span><span class="p">],</span>
+    <span class="n">args</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">detection_units</span><span class="o">.</span><span class="n">services</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">preprocess</span><span class="o">.</span><span class="n">extract_log</span><span class="p">(</span>
+        <span class="n">log_all</span><span class="p">,</span>
+        <span class="n">subnets</span><span class="o">=</span><span class="n">subnet</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cidrs</span><span class="p">,</span>
+        <span class="n">include_ports</span><span class="o">=</span><span class="n">service</span><span class="o">.</span><span class="n">include</span><span class="p">,</span>
+        <span class="n">exclude_ports</span><span class="o">=</span><span class="n">service</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># one can also load_previous(known_anomaly, label_value=1)</span>
+    <span class="c1"># and/or load_previous(unknown, label_value=None).</span>
+    <span class="c1"># known_anomaly can be concat-ed with known_normal</span>
+    <span class="c1"># since both have label values.</span>
+    <span class="c1"># log_unknown can be concat-ed with log without label values.</span>
+    <span class="n">known_normal</span> <span class="o">=</span> <span class="n">load_previous</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">previous</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">known_normal</span><span class="p">,</span>
+        <span class="n">date_to</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">date_to_training</span><span class="p">,</span>
+        <span class="n">label_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">log_labeled</span> <span class="o">=</span> <span class="n">labeled</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">previous</span><span class="o">.</span><span class="n">log</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">load_previous_log</span><span class="p">(</span>
+        <span class="n">entries</span><span class="o">=</span><span class="n">known_normal</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">log_labeled</span> <span class="o">=</span> <span class="n">apply_exclude_lists</span><span class="p">(</span><span class="n">log_labeled</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">preprocess</span><span class="o">.</span><span class="n">exclude_lists</span><span class="p">)</span>
+    <span class="n">log_labeled</span> <span class="o">=</span> <span class="n">preprocess</span><span class="o">.</span><span class="n">extract_log</span><span class="p">(</span>
+        <span class="n">log_labeled</span><span class="p">,</span>
+        <span class="n">subnets</span><span class="o">=</span><span class="n">subnet</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cidrs</span><span class="p">,</span>
+        <span class="n">include_ports</span><span class="o">=</span><span class="n">service</span><span class="o">.</span><span class="n">include</span><span class="p">,</span>
+        <span class="n">exclude_ports</span><span class="o">=</span><span class="n">service</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+        <span class="n">known_normal</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">level</span><span class="o">=</span><span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span>
+    <span class="p">)</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">subnet</span> <span class="o">=</span> <span class="n">subnet</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">args</span><span class="o">.</span><span class="n">service</span> <span class="o">=</span> <span class="n">service_name</span>
+    <span class="n">main_detection</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">log</span><span class="p">,</span> <span class="n">log_labeled</span><span class="p">]),</span> <span class="n">label</span><span class="o">=</span><span class="n">known_normal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_log"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.load_log">[docs]</a><span class="k">def</span> <span class="nf">load_log</span><span class="p">(</span>
+    <span class="n">dir_IDS_log</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">date_from</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">date_to</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+    <span class="n">nrows_read</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    load IDS logs of the dates in [ date_from, date_to ]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir_IDS_log</span>
+<span class="sd">        The path of the directory containing logs to be load.</span>
+<span class="sd">    date_from</span>
+<span class="sd">        Start date.</span>
+<span class="sd">    date_to</span>
+<span class="sd">        End date.</span>
+<span class="sd">    nrows_read</span>
+<span class="sd">        Maximum number of rows to load, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    log</span>
+<span class="sd">        IDS log.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">psykoda.io.reader._fujitsu_splunk</span> <span class="kn">import</span> <span class="n">FujitsuSplunk</span>
+    <span class="kn">from</span> <span class="nn">psykoda.preprocess</span> <span class="kn">import</span> <span class="n">RoundDatetime</span><span class="p">,</span> <span class="n">drop_null</span><span class="p">,</span> <span class="n">set_index</span>
+    <span class="kn">from</span> <span class="nn">psykoda.utils</span> <span class="kn">import</span> <span class="n">daterange2list</span>
+
+    <span class="n">daterange</span> <span class="o">=</span> <span class="n">daterange2list</span><span class="p">(</span><span class="n">date_from</span><span class="p">,</span> <span class="n">date_to</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_load_log_catch</span><span class="p">(</span><span class="n">load</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">load</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;not found: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">ex</span><span class="p">)</span>
+
+    <span class="n">io</span> <span class="o">=</span> <span class="n">FujitsuSplunk</span><span class="p">(</span><span class="n">dir_IDS_log</span><span class="o">=</span><span class="n">dir_IDS_log</span><span class="p">,</span> <span class="n">nrows_read</span><span class="o">=</span><span class="n">nrows_read</span><span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">set_index</span><span class="p">(</span>
+        <span class="n">RoundDatetime</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">_load_log_catch</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">load_log</span><span class="p">,</span> <span class="n">daterange</span><span class="p">)))</span>
+    <span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">drop_null</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">log</span></div>
+
+
+<div class="viewcode-block" id="load_previous"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.load_previous">[docs]</a><span class="k">def</span> <span class="nf">load_previous</span><span class="p">(</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">LoadPreviousConfigItem</span><span class="p">,</span> <span class="n">date_to</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">label_value</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">psykoda.preprocess</span> <span class="kn">import</span> <span class="n">round_datetime</span>
+    <span class="kn">from</span> <span class="nn">psykoda.utils</span> <span class="kn">import</span> <span class="n">DateRange</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">date_filter</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">datetime</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">round_datetime</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;day&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">DateRange</span><span class="p">(</span>
+            <span class="n">end_inclusive</span><span class="o">=</span><span class="n">date_to</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">ndate</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">list</span><span class="p">,</span>
+            <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DATETIME_ROUNDED</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">],</span>
+            <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">DATETIME_ROUNDED</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;Specified list of </span><span class="si">%s</span><span class="s2"> was not found.  &quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;Create one with at least </span><span class="si">%s</span><span class="s2"> columns, &quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;or remove the path or entry from config.&quot;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">list</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">DATETIME_ROUNDED</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">),</span>
+            <span class="n">exc_info</span><span class="o">=</span><span class="n">ex</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">date_filter</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">label_value</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="apply_exclude_lists"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.apply_exclude_lists">[docs]</a><span class="k">def</span> <span class="nf">apply_exclude_lists</span><span class="p">(</span>
+    <span class="n">log</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">dir_exclude_lists</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    exclude logs according to exclude lists in dir_exclude_lists</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    log</span>
+<span class="sd">        Source log.</span>
+<span class="sd">    dir_exclude_lists</span>
+<span class="sd">        The path of directory containing exclude list csv files.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    log</span>
+<span class="sd">        Log after applying exclude list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+
+    <span class="kn">from</span> <span class="nn">psykoda.constants</span> <span class="kn">import</span> <span class="n">EXCLUDE_LIST_FILE_SPLITSTR</span><span class="p">,</span> <span class="n">EXCLUDE_LIST_PREFIX</span>
+    <span class="kn">from</span> <span class="nn">psykoda.preprocess</span> <span class="kn">import</span> <span class="n">exclude_log</span>
+
+    <span class="k">assert</span> <span class="n">log</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">dir_exclude_lists</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">log</span>
+    <span class="n">path_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_exclude_lists</span><span class="p">,</span> <span class="n">EXCLUDE_LIST_PREFIX</span> <span class="o">+</span> <span class="s2">&quot;*.csv&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path_list</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;no exclude_list files exist&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">log</span>
+
+    <span class="n">exclusion</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;column_name&quot;</span><span class="p">:</span> <span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filter_path</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                <span class="n">EXCLUDE_LIST_FILE_SPLITSTR</span>
+            <span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s2">&quot;filter_patterns&quot;</span><span class="p">:</span> <span class="n">validate_patterns</span><span class="p">(</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filter_path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+            <span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">filter_path</span> <span class="ow">in</span> <span class="n">path_list</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">exclude_log</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">exclusion</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_patterns"><a class="viewcode-back" href="../../../psykoda.cli.html#psykoda.cli.internal.validate_patterns">[docs]</a><span class="k">def</span> <span class="nf">validate_patterns</span><span class="p">(</span><span class="n">patterns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Strip whitespaces in Index from left and right sides.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    patterns</span>
+<span class="sd">        Index.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ret</span>
+<span class="sd">        Index with whitespace removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">pandas.api.types</span> <span class="k">as</span> <span class="nn">types</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
+
+    <span class="c1"># convention</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">types</span><span class="o">.</span><span class="n">is_string_dtype</span><span class="p">(</span><span class="n">patterns</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">patterns</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">patterns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">patterns</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">ret</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Spaces around exclusion pattern are deprecated&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../cli.html">psykoda.cli</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>psykoda.io.labeled package &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="psykoda.io.reader package" href="psykoda.io.reader.html" />
+    <link rel="prev" title="psykoda.io package" href="psykoda.io.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="psykoda-io-labeled-package">
+<h1>psykoda.io.labeled package<a class="headerlink" href="#psykoda-io-labeled-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="psykoda-io-labeled-file-module">
+<h2>psykoda.io.labeled.file module<a class="headerlink" href="#psykoda-io-labeled-file-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.io.labeled.file"></span><p>File-based Previous Log Loader and Saver</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileLoader">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.labeled.file.</span></span><span class="sig-name descname"><span class="pre">FileLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.io.labeled.file.FileStorageBaseConfig" title="psykoda.io.labeled.file.FileStorageBaseConfig"><span class="pre">FileStorageBaseConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileLoader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#psykoda.io.labeled.loader.Loader" title="psykoda.io.labeled.loader.Loader"><code class="xref py py-class docutils literal notranslate"><span class="pre">psykoda.io.labeled.loader.Loader</span></code></a></p>
+<p>File-based Loader</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileLoader.Config">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileLoader.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileLoader.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration of FileLoader</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileLoader.load_previous_log">
+<span class="sig-name descname"><span class="pre">load_previous_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.indexes.multi.MultiIndex</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileLoader.load_previous_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileLoader.load_previous_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load previous log from storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>entries</strong> – collection of (datetime_rounded, src_ip)s
+to load log corresponding to</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileSaver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.labeled.file.</span></span><span class="sig-name descname"><span class="pre">FileSaver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.io.labeled.file.FileStorageConfig" title="psykoda.io.labeled.file.FileStorageConfig"><span class="pre">FileStorageConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileSaver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileSaver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#psykoda.io.labeled.saver.Saver" title="psykoda.io.labeled.saver.Saver"><code class="xref py py-class docutils literal notranslate"><span class="pre">psykoda.io.labeled.saver.Saver</span></code></a></p>
+<p>File-based Saver</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileSaver.Config">
+<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileSaver.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileSaver.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration of FileSaver</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileSaver.Config.all">
+<span class="sig-name descname"><span class="pre">all</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#psykoda.io.labeled.file.FileSaver.Config.all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileSaver.Config.compression">
+<span class="sig-name descname"><span class="pre">compression</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#psykoda.io.labeled.file.FileSaver.Config.compression" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileSaver.save_previous_log">
+<span class="sig-name descname"><span class="pre">save_previous_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.indexes.multi.MultiIndex</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileSaver.save_previous_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileSaver.save_previous_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save log to storage for future use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – log</p></li>
+<li><p><strong>entries</strong> – collection of (datetime_rounded, src_ip)s
+to save log corresponding to</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileStorageBaseConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.labeled.file.</span></span><span class="sig-name descname"><span class="pre">FileStorageBaseConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labeled_basename_format_datetime</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'%Y-%m-%d-%H'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileStorageBaseConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileStorageBaseConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Common configuration for FileLoader and FileSaver</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileStorageBaseConfig.dir">
+<span class="sig-name descname"><span class="pre">dir</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#psykoda.io.labeled.file.FileStorageBaseConfig.dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileStorageBaseConfig.labeled_basename_format_datetime">
+<span class="sig-name descname"><span class="pre">labeled_basename_format_datetime</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><em class="property"> <span class="pre">=</span> <span class="pre">'%Y-%m-%d-%H'</span></em><a class="headerlink" href="#psykoda.io.labeled.file.FileStorageBaseConfig.labeled_basename_format_datetime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileStorageConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.labeled.file.</span></span><span class="sig-name descname"><span class="pre">FileStorageConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.io.labeled.file.FileStorageBaseConfig" title="psykoda.io.labeled.file.FileStorageBaseConfig"><span class="pre">psykoda.io.labeled.file.FileStorageBaseConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">load</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.io.labeled.file.FileLoader.Config" title="psykoda.io.labeled.file.FileLoader.Config"><span class="pre">psykoda.io.labeled.file.FileLoader.Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.io.labeled.file.FileSaver.Config" title="psykoda.io.labeled.file.FileSaver.Config"><span class="pre">psykoda.io.labeled.file.FileSaver.Config</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/labeled/file.html#FileStorageConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.file.FileStorageConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration fed to factory</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileStorageConfig.base">
+<span class="sig-name descname"><span class="pre">base</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.io.labeled.file.FileStorageBaseConfig" title="psykoda.io.labeled.file.FileStorageBaseConfig"><span class="pre">psykoda.io.labeled.file.FileStorageBaseConfig</span></a></em><a class="headerlink" href="#psykoda.io.labeled.file.FileStorageConfig.base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileStorageConfig.load">
+<span class="sig-name descname"><span class="pre">load</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.io.labeled.file.FileLoader.Config" title="psykoda.io.labeled.file.FileLoader.Config"><span class="pre">psykoda.io.labeled.file.FileLoader.Config</span></a></em><a class="headerlink" href="#psykoda.io.labeled.file.FileStorageConfig.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="psykoda.io.labeled.file.FileStorageConfig.save">
+<span class="sig-name descname"><span class="pre">save</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="#psykoda.io.labeled.file.FileSaver.Config" title="psykoda.io.labeled.file.FileSaver.Config"><span class="pre">psykoda.io.labeled.file.FileSaver.Config</span></a></em><a class="headerlink" href="#psykoda.io.labeled.file.FileStorageConfig.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="psykoda-io-labeled-loader-module">
+<h2>psykoda.io.labeled.loader module<a class="headerlink" href="#psykoda-io-labeled-loader-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.io.labeled.loader"></span><p>Previous Log Loader API</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.loader.Loader">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.labeled.loader.</span></span><span class="sig-name descname"><span class="pre">Loader</span></span><a class="reference internal" href="_modules/psykoda/io/labeled/loader.html#Loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.loader.Loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Previous Log Loader</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.io.labeled.loader.Loader.load_previous_log">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">load_previous_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.indexes.multi.MultiIndex</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="reference internal" href="_modules/psykoda/io/labeled/loader.html#Loader.load_previous_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.loader.Loader.load_previous_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load previous log from storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>entries</strong> – collection of (datetime_rounded, src_ip)s
+to load log corresponding to</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="psykoda-io-labeled-saver-module">
+<h2>psykoda.io.labeled.saver module<a class="headerlink" href="#psykoda-io-labeled-saver-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.io.labeled.saver"></span><p>Previous Log Saver API</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="psykoda.io.labeled.saver.Saver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.labeled.saver.</span></span><span class="sig-name descname"><span class="pre">Saver</span></span><a class="reference internal" href="_modules/psykoda/io/labeled/saver.html#Saver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.saver.Saver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Previous Log Saver</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="psykoda.io.labeled.saver.Saver.save_previous_log">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">save_previous_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entries</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.indexes.multi.MultiIndex</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/labeled/saver.html#Saver.save_previous_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.saver.Saver.save_previous_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save log to storage for future use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> – log</p></li>
+<li><p><strong>entries</strong> – collection of (datetime_rounded, src_ip)s
+to save log corresponding to</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-psykoda.io.labeled">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-psykoda.io.labeled" title="Permalink to this headline">¶</a></h2>
+<p>IO functionalities for labeled log</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.io.labeled.factory">
+<span class="sig-prename descclassname"><span class="pre">psykoda.io.labeled.</span></span><span class="sig-name descname"><span class="pre">factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#psykoda.io.labeled.file.FileStorageConfig" title="psykoda.io.labeled.file.FileStorageConfig"><span class="pre">psykoda.io.labeled.file.FileStorageConfig</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#psykoda.io.labeled.loader.Loader" title="psykoda.io.labeled.loader.Loader"><span class="pre">psykoda.io.labeled.loader.Loader</span></a><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="#psykoda.io.labeled.saver.Saver" title="psykoda.io.labeled.saver.Saver"><span class="pre">psykoda.io.labeled.saver.Saver</span></a><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/psykoda/io/labeled.html#factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.labeled.factory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="psykoda.html">psykoda package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="psykoda.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="psykoda.cli.html">psykoda.cli package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.constants.html">psykoda.constants package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="psykoda.io.html">psykoda.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.preprocess.html">psykoda.preprocess package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-detection-module">psykoda.detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-feature-extraction-module">psykoda.feature_extraction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-utils-module">psykoda.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#module-psykoda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+  <li><a href="psykoda.html">psykoda package</a><ul>
+  <li><a href="psykoda.io.html">psykoda.io package</a><ul>
+      <li>Previous: <a href="psykoda.io.html" title="previous chapter">psykoda.io package</a></li>
+      <li>Next: <a href="psykoda.io.reader.html" title="next chapter">psykoda.io.reader package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/psykoda.io.labeled.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

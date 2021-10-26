@@ -1,0 +1,4 @@
+subnet,location
+10.1.0.0/16, Japan
+10.10.0.0/16, Europe
+10.100.0.0/16, America

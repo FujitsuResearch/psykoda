@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>psykoda.io.reporting package &#8212; psykoda  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="psykoda.preprocess package" href="psykoda.preprocess.html" />
+    <link rel="prev" title="psykoda.io.reader package" href="psykoda.io.reader.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="psykoda-io-reporting-package">
+<h1>psykoda.io.reporting package<a class="headerlink" href="#psykoda-io-reporting-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="psykoda-io-reporting-plot-module">
+<h2>psykoda.io.reporting.plot module<a class="headerlink" href="#psykoda-io-reporting-plot-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-psykoda.io.reporting.plot"></span><p>Plot detection result</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="psykoda.io.reporting.plot.DimensionTooLow">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">psykoda.io.reporting.plot.</span></span><span class="sig-name descname"><span class="pre">DimensionTooLow</span></span><a class="reference internal" href="_modules/psykoda/io/reporting/plot.html#DimensionTooLow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reporting.plot.DimensionTooLow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>Not 2-D plottable</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="psykoda.io.reporting.plot.plot_detection">
+<span class="sig-prename descclassname"><span class="pre">psykoda.io.reporting.plot.</span></span><span class="sig-name descname"><span class="pre">plot_detection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_anomaly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_anomaly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_labeled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_labeled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_saved</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_plot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/psykoda/io/reporting/plot.html#plot_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#psykoda.io.reporting.plot.plot_detection" title="Permalink to this definition">¶</a></dt>
+<dd><p>2-D scatter plot of feature representations</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>type annotation (with change of API)</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – embeddings of samples
+:shape: (n_samples, n_features)</p></li>
+<li><p><strong>idx_anomaly</strong> – index of anomaly samples</p></li>
+<li><p><strong>name_anomaly</strong> – name of anomaly samples</p></li>
+<li><p><strong>X_labeled</strong> – embeddings of labeled samples
+:shape: (n_labeled, n_features)</p></li>
+<li><p><strong>name_labeled</strong> – name of labeled samples</p></li>
+<li><p><strong>path_saved</strong> – path to save figure to</p></li>
+<li><p><strong>no_plot</strong> – <div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>replace with plot=True to make API simpler</p>
+</div>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-psykoda.io.reporting">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-psykoda.io.reporting" title="Permalink to this headline">¶</a></h2>
+<p>reporting</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">psykoda</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="psykoda.html">psykoda package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="psykoda.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="psykoda.cli.html">psykoda.cli package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.constants.html">psykoda.constants package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="psykoda.io.html">psykoda.io package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="psykoda.preprocess.html">psykoda.preprocess package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-detection-module">psykoda.detection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-feature-extraction-module">psykoda.feature_extraction module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#psykoda-utils-module">psykoda.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psykoda.html#module-psykoda">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app/index.html">Application Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html">基本的な使い方</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_ja/index.html#id11">ユースケース</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev/index.html">Development Guides</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">src</a><ul>
+  <li><a href="psykoda.html">psykoda package</a><ul>
+  <li><a href="psykoda.io.html">psykoda.io package</a><ul>
+      <li>Previous: <a href="psykoda.io.reader.html" title="previous chapter">psykoda.io.reader package</a></li>
+      <li>Next: <a href="psykoda.preprocess.html" title="next chapter">psykoda.preprocess package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, KKO.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/psykoda.io.reporting.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
