@@ -17,7 +17,7 @@ scikit-learn = "^0.23"
 scipy = "*"
 numba = "^0.53"
 shap = "^0.37"
-tensorflow = "^2.3"
+tensorflow = "^2.3.4"
 dacite = "^1.6.0"
 
 [tool.poetry.dev-dependencies]
