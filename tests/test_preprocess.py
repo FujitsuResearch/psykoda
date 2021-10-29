@@ -1,4 +1,5 @@
 import ipaddress
+
 import pandas as pd
 import pytest
 
