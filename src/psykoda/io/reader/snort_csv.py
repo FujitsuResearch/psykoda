@@ -46,8 +46,9 @@ default_columns = [
 class SnortCSV(Reader):
     """Load IDS log from Snort CSV files."""
 
-    def __init__(  # pylint: disable=dangerous-default-value
+    def __init__(  # pylint: disable=dangerous-default-value,redefined-outer-name
         # columns is read-only
+        # intended use: SnortCSV(columns=columns(conf))
         self,
         *,
         filename: str,
@@ -71,7 +72,7 @@ class SnortCSV(Reader):
         * Log rotation is not supported yet.
         """
         self.filename = filename
-        self.columns = columns
+        self.columns = columns[:]  # shallow copy
         if year_included:
             datetime_format = "%m/%d/%y-%H:%M:%S.%f "
             self.date_parser = lambda s: datetime.strptime(s, datetime_format)
