@@ -24,7 +24,7 @@ class RoundDatetime:
             for smaller_time_unit in _time_units[: _time_units.index(self.time_unit)]
         }
 
-    def __call__(self, df):
+    def __call__(self, df: pandas.DataFrame):
         return df.assign(
             datetime_rounded=df["datetime_full"].apply(
                 lambda dt: dt.replace(**self.table)
