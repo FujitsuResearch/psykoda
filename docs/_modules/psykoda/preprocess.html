@@ -120,11 +120,27 @@
 <span class="sd">    -------</span>
 <span class="sd">    in_subnets(addr)</span>
 <span class="sd">        predicate for IP addresses</span>
+<span class="sd">    </span>
+<span class="sd">    Warnings</span>
+<span class="sd">    --------</span>
+<span class="sd">    Optimized for IPv4.  Does not support IPv6.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">netaddr_and_mask</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span>
+            <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">subnet</span><span class="o">.</span><span class="n">network_address</span><span class="o">.</span><span class="n">packed</span><span class="p">,</span> <span class="s2">&quot;big&quot;</span><span class="p">),</span>
+            <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">subnet</span><span class="o">.</span><span class="n">netmask</span><span class="o">.</span><span class="n">packed</span><span class="p">,</span> <span class="s2">&quot;big&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">sub_networks</span>
+    <span class="p">]</span>
+
     <span class="c1"># Helper function that returns True if the IP address is in a subnets.</span>
     <span class="k">def</span> <span class="nf">_ret</span><span class="p">(</span><span class="n">addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">subnet</span> <span class="ow">in</span> <span class="n">sub_networks</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_address</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="ow">in</span> <span class="n">subnet</span><span class="p">:</span>
+        <span class="n">addr_int</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">24</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">addr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))]</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">netaddr</span><span class="p">,</span> <span class="n">netmask</span> <span class="ow">in</span> <span class="n">netaddr_and_mask</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">addr_int</span> <span class="o">&amp;</span> <span class="n">netmask</span> <span class="o">==</span> <span class="n">netaddr</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span>
 

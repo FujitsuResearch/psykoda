@@ -39,10 +39,10 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -602,10 +602,10 @@
         <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s2">&quot;no anomaly found&quot;</span><span class="p">]])</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path_save</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[RESULT]&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Detection summary file: </span><span class="si">{</span><span class="n">path_save</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Detection summary file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path_save</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">)</span>
     <span class="n">num_anomaly_ipaddr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="k">if</span> <span class="n">anomaly_found</span> <span class="k">else</span> <span class="mi">0</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Number of unique anomaly IP addresses: </span><span class="si">{</span><span class="n">num_anomaly_ipaddr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span>
+        <span class="s2">&quot;Number of unique anomaly IP addresses: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">num_anomaly_ipaddr</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">anomaly_found</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">src_ip</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
@@ -613,7 +613,9 @@
                 <span class="n">results_pd</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;src_ip == @src_ip&quot;</span><span class="p">)[</span><span class="s2">&quot;anomaly_score&quot;</span><span class="p">]</span>
             <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">src_ip</span><span class="si">}</span><span class="s2"> (max anomaly score: </span><span class="si">{</span><span class="n">max_anomaly_score</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;- </span><span class="si">%s</span><span class="s2"> (max anomaly score: </span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="n">src_ip</span><span class="p">,</span>
+                <span class="n">max_anomaly_score</span><span class="p">,</span>
                 <span class="n">extra</span><span class="o">=</span><span class="n">to_stderr</span><span class="p">,</span>
             <span class="p">)</span></div>
 
@@ -838,8 +840,8 @@
     <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
             <span class="s2">&quot;Specified list of </span><span class="si">%s</span><span class="s2"> was not found.  &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;Create one with at least </span><span class="si">%s</span><span class="s2"> columns, &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;or remove the path or entry from config.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Create one with at least </span><span class="si">%s</span><span class="s2"> columns, &quot;</span>
+            <span class="s2">&quot;or remove the path or entry from config.&quot;</span><span class="p">,</span>
             <span class="n">config</span><span class="o">.</span><span class="n">list</span><span class="p">,</span>
             <span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">DATETIME_ROUNDED</span><span class="p">,</span> <span class="n">col</span><span class="o">.</span><span class="n">SRC_IP</span><span class="p">),</span>
             <span class="n">exc_info</span><span class="o">=</span><span class="n">ex</span><span class="p">,</span>
