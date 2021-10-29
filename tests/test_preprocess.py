@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+import ipaddress
 
 from psykoda import preprocess
 from psykoda.constants import col
@@ -298,3 +299,30 @@ def test_screening_numlog_5(log_2):
     result = screening_numlog(log_2, 1, 3)
 
     assert result.equals(expect)
+
+
+def test_addr_in_subnets():
+    sub_networks = [
+        ipaddress.ip_network("192.168.1.0/24"),
+        ipaddress.ip_network("10.10.10.0/23"),
+        ipaddress.ip_network("20.20.20.0/25")
+    ]
+
+    expected_table = {
+        "192.168.0.254": False,
+        "192.168.1.1": True,
+        "192.168.1.254": True,
+        "192.168.2.1": False,
+        "10.10.9.254": False,
+        "10.10.10.1": True,
+        "10.10.11.254": True,
+        "10.10.12.1": False,
+        "20.20.19.254": False,
+        "20.20.20.1": True,
+        "20.20.20.126": True,
+        "20.20.20.128": False
+    }
+
+    helper_func = preprocess.addr_in_subnets(sub_networks)
+    for ipaddr, expected_result in expected_table.items():
+        assert helper_func(ipaddr) == expected_result
