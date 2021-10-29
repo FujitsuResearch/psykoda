@@ -1,3 +1,4 @@
+import datetime
 import ipaddress
 
 import pandas as pd
@@ -327,3 +328,43 @@ def test_addr_in_subnets():
     helper_func = preprocess.addr_in_subnets(sub_networks)
     for ipaddr, expected_result in expected_table.items():
         assert helper_func(ipaddr) == expected_result
+
+
+def test_RoundDateTime():
+    origin_df = pd.DataFrame(
+        [
+            [datetime.datetime(2020, 1, 1, 1, 2, 3), 0],
+            [datetime.datetime(2020, 1, 1, 4, 5, 6), 1],
+            [datetime.datetime(2021, 2, 3, 4, 0, 0), 2],
+            [datetime.datetime(2021, 3, 4, 0, 0, 0), 3],
+        ],
+        columns=["datetime_full", "dummy"],
+    )
+    expected = pd.DataFrame(
+        [
+            [
+                datetime.datetime(2020, 1, 1, 1, 2, 3),
+                0,
+                datetime.datetime(2020, 1, 1, 1, 0, 0),
+            ],
+            [
+                datetime.datetime(2020, 1, 1, 4, 5, 6),
+                1,
+                datetime.datetime(2020, 1, 1, 4, 0, 0),
+            ],
+            [
+                datetime.datetime(2021, 2, 3, 4, 0, 0),
+                2,
+                datetime.datetime(2021, 2, 3, 4, 0, 0),
+            ],
+            [
+                datetime.datetime(2021, 3, 4, 0, 0, 0),
+                3,
+                datetime.datetime(2021, 3, 4, 0, 0, 0),
+            ],
+        ],
+        columns=["datetime_full", "dummy", "datetime_rounded"],
+    )
+
+    actual = preprocess.RoundDatetime("hour")(origin_df)
+    assert actual.equals(expected)
