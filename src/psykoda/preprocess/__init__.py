@@ -87,7 +87,7 @@ def addr_in_subnets(sub_networks: list) -> Callable[[str], bool]:
     -------
     in_subnets(addr)
         predicate for IP addresses
-    
+
     Warnings
     --------
     Optimized for IPv4.  Does not support IPv6.
