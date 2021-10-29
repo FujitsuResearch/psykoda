@@ -19,11 +19,15 @@ logger = getLogger(__name__)
 class RoundDatetime:
     def __init__(self, time_unit: str):
         self.time_unit = time_unit
+        self.table = {
+            smaller_time_unit: 0
+            for smaller_time_unit in _time_units[: _time_units.index(self.time_unit)]
+        }
 
-    def __call__(self, df: pandas.DataFrame):
+    def __call__(self, df):
         return df.assign(
             datetime_rounded=df["datetime_full"].apply(
-                lambda dt: round_datetime(dt, self.time_unit)
+                lambda dt: dt.replace(**self.table)
             )
         )
 
