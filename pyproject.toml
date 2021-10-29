@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "psykoda"
 version = "0.1.0"
-description = "Koda IDS"
+description = "Anomaly detection for IDS logs"
 authors = [
     "Koda, Satoru <koda.satoru@fujitsu.com>",
     "Kokubo, Hirotaka <kokubo.hirotaka@fujitsu.com>",
