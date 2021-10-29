@@ -305,7 +305,7 @@ def test_addr_in_subnets():
     sub_networks = [
         ipaddress.ip_network("192.168.1.0/24"),
         ipaddress.ip_network("10.10.10.0/23"),
-        ipaddress.ip_network("20.20.20.0/25")
+        ipaddress.ip_network("20.20.20.0/25"),
     ]
 
     expected_table = {
@@ -320,7 +320,7 @@ def test_addr_in_subnets():
         "20.20.19.254": False,
         "20.20.20.1": True,
         "20.20.20.126": True,
-        "20.20.20.128": False
+        "20.20.20.128": False,
     }
 
     helper_func = preprocess.addr_in_subnets(sub_networks)
