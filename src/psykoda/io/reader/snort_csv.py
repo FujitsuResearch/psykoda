@@ -72,7 +72,7 @@ class SnortCSV(Reader):
         * Log rotation is not supported yet.
         """
         self.filename = filename
-        self.columns = columns[:] # shallow copy
+        self.columns = columns[:]  # shallow copy
         if year_included:
             datetime_format = "%m/%d/%y-%H:%M:%S.%f "
             self.date_parser = lambda s: datetime.strptime(s, datetime_format)
