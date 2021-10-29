@@ -1,6 +1,6 @@
+import ipaddress
 import pandas as pd
 import pytest
-import ipaddress
 
 from psykoda import preprocess
 from psykoda.constants import col
