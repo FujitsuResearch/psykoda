@@ -88,10 +88,17 @@ def addr_in_subnets(sub_networks: list) -> Callable[[str], bool]:
     in_subnets(addr)
         predicate for IP addresses
     """
+    netaddr_and_mask = []
+    for subnet in sub_networks:
+        netaddr_and_mask.append(
+            (int.from_bytes(subnet.network_address.packed, "big"), int.from_bytes(subnet.netmask.packed, "big"))
+        )
+    
     # Helper function that returns True if the IP address is in a subnets.
     def _ret(addr: str):
-        for subnet in sub_networks:
-            if ipaddress.ip_address(addr) in subnet:
+        addr_int = sum([int(part) << i for i, part in zip([24, 16, 8, 0], addr.split("."))])
+        for netaddr, netmask in netaddr_and_mask:
+            if addr_int & netmask == netaddr:
                 return True
         return False
 
