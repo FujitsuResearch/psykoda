@@ -322,8 +322,6 @@ def main_detection_prepare_data(
         return None
 
     feature_label.extract_nonzeros()
-    logger.info(label.index)
-    logger.info(feature_label.index)
     label = label.loc[label.index & feature_label.index]
     feature_label.put_labels(labeled_samples=label)
 
@@ -337,11 +335,6 @@ def main_detection_after_prepare_data(
 ):
     """Split data and construct labeled training feature."""
     train_test_splitted = feature_label.split_train_test(args.date_to_training)
-    logger.info(
-        "feature_label.index: %s\nlabel.index: %s",
-        feature_label.index,
-        label.index.tolist(),
-    )
     idx_labeled = [
         feature_label.index.index(sample)
         for sample in label.index
