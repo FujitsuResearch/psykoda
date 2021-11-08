@@ -29,7 +29,7 @@ Run `poetry run psykoda -h` to see command line reference.
 
 ### Clone psykoda repository
 ```
-git clone <FIXME: repository in github.com>
+git clone https://github.com/FujitsuResearch/psykoda.git
 ```
 
 ### Install psykoda
