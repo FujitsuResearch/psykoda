@@ -8,6 +8,7 @@ from datetime import datetime
 from logging import getLogger
 from typing import Callable, Iterable, List, Optional
 
+import numpy as np
 import pandas
 
 from psykoda.constants import col, ip
@@ -29,6 +30,36 @@ class RoundDatetime:
             datetime_rounded=df["datetime_full"].apply(
                 lambda dt: dt.replace(**self.table)
             )
+        )
+
+
+class FastRoundDatetime:
+    def __init__(self, time_unit: str):
+        self.time_unit = time_unit
+        self.table = {
+            "microsecond": 1000,
+            "second": 1000 ** 3,
+            "minute": 60 * (1000 ** 3),
+            "hour": 3600 * (1000 ** 3),
+            "day": 24 * 3600 * (1000 ** 3),
+        }
+        if self.time_unit not in self.table:
+            raise ValueError
+
+        self.roundfunc = self.gen_roundfunc()
+
+    def gen_roundfunc(self):
+        base = self.table[self.time_unit]
+
+        def timeround(dt):
+            delta = dt % base
+            return dt - delta
+
+        return np.frompyfunc(timeround, 1, 1)
+
+    def __call__(self, df: pandas.DataFrame):
+        return df.assign(
+            datetime_rounded=self.roundfunc(df["datetime_full"]).astype("datetime64")
         )
 
 
