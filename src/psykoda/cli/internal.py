@@ -756,7 +756,12 @@ def load_log(
     """
 
     from psykoda.io.reader._fujitsu_splunk import FujitsuSplunk
-    from psykoda.preprocess import RoundDatetime, drop_null, set_index
+    from psykoda.preprocess import (
+        FastRoundDatetime,
+        RoundDatetime,
+        drop_null,
+        set_index,
+    )
     from psykoda.utils import daterange2list
 
     daterange = daterange2list(date_from, date_to)
@@ -770,7 +775,7 @@ def load_log(
 
     io = FujitsuSplunk(dir_IDS_log=dir_IDS_log, nrows_read=nrows_read)
     log = set_index(
-        RoundDatetime("hour")(pd.concat(_load_log_catch(io.load_log, daterange)))
+        FastRoundDatetime("hour")(pd.concat(_load_log_catch(io.load_log, daterange)))
     )
     log = drop_null(log)
     return log
