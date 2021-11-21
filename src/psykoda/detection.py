@@ -454,6 +454,9 @@ class DeepSAD:
         """
         # Without type annotation ": ndarray" after score, sphinx treats "score" as type.
         # some text and a blank line is needed before :shape: too.
+
+        if self.detector is None:
+            return
         score = self.detector.predict(X)
         if not scale:
             return score
