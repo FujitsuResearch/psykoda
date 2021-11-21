@@ -456,7 +456,7 @@ class DeepSAD:
         # some text and a blank line is needed before :shape: too.
 
         if self.detector is None:
-            return
+            raise AttributeError("detector is not set")
         score = self.detector.predict(X)
         if not scale:
             return score
@@ -486,6 +486,8 @@ class DeepSAD:
             :shape: (n_samples, dim_embedding)
         """
 
+        if self.detector is None:
+            raise AttributeError("detector is not set")
         if X.shape[0] == 0:
             return None
 
