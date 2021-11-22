@@ -618,7 +618,9 @@ def detection_report(
 
     for i, sample in enumerate(shap_value_idx_sorted.index):
         shap_values = shap_value_idx_sorted.loc[sample].sort_values(ascending=False)
-        fe: List[Union[int, str]] = ["__".join(l) for l in list(shap_values.index[:shap_top_k])]
+        fe: List[Union[int, str]] = [
+            "__".join(l) for l in list(shap_values.index[:shap_top_k])
+        ]
         value = list(shap_values.iloc[:shap_top_k])
         for k in range(shap_top_k):
             if value[k] == 0:
