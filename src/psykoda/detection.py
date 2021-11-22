@@ -486,14 +486,15 @@ class DeepSAD:
             :shape: (n_samples, dim_embedding)
         """
 
-        if self.detector is None:
+        detector = self.detector
+        if detector is None:
             raise AttributeError("detector is not set")
         if X.shape[0] == 0:
             return None
 
         encoder = tf.keras.Model(
-            inputs=self.detector.input,
-            outputs=self.detector.get_layer(LAYERNAME_ENCODER_OUTPUT).output,
+            inputs=detector.input,
+            outputs=detector.get_layer(LAYERNAME_ENCODER_OUTPUT).output,
         )
         return encoder.predict(X)
 
