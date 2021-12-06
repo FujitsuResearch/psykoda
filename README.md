@@ -7,7 +7,7 @@ This tool uses machine learning to analyze the alert log and detect most anomalo
 This mitigates alert fatigue for security operators and extracts potential cyber attacks.
 
 This software consists of a library and an application built on it.
-See API Reference for library details.
+See [API Reference](https://fujitsuresearch.github.io/psykoda/psykoda.html) for library details.
 
 ## Application Usage
 See [separate document for details](doc/source/app/index.md).
