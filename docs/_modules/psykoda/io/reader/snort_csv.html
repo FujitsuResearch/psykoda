@@ -79,8 +79,9 @@
 <div class="viewcode-block" id="SnortCSV"><a class="viewcode-back" href="../../../../psykoda.io.reader.html#psykoda.io.reader.snort_csv.SnortCSV">[docs]</a><span class="k">class</span> <span class="nc">SnortCSV</span><span class="p">(</span><span class="n">Reader</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load IDS log from Snort CSV files.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=dangerous-default-value</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>  <span class="c1"># pylint: disable=dangerous-default-value,redefined-outer-name</span>
         <span class="c1"># columns is read-only</span>
+        <span class="c1"># intended use: SnortCSV(columns=columns(conf))</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -104,7 +105,7 @@
 <span class="sd">        * Log rotation is not supported yet.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[:]</span>  <span class="c1"># shallow copy</span>
         <span class="k">if</span> <span class="n">year_included</span><span class="p">:</span>
             <span class="n">datetime_format</span> <span class="o">=</span> <span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%y-%H:%M:%S.</span><span class="si">%f</span><span class="s2"> &quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">date_parser</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">datetime_format</span><span class="p">)</span>

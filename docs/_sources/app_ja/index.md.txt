@@ -294,7 +294,7 @@ IDSログ格納ディレクトリにはIDSログファイルだけを、除外�
 
 次のコマンドでpsykodaを使ったアノマリ検知を実施することができます。
 ```
-poetry run kids [--config CONFIG] --date_from DATE_FROM --date_to DATE_TO
+poetry run psykoda [--config CONFIG] --date_from DATE_FROM --date_to DATE_TO
 ```
 - CONFIG: 設定ファイルのファイルパス (省略時: カレントディレクトリ/`config.json`)
 - DATE_FROM: 検知開始日(YYYY-MM-DD形式)
@@ -302,7 +302,7 @@ poetry run kids [--config CONFIG] --date_from DATE_FROM --date_to DATE_TO
 
 例えば、`path/to/config.json`にある設定ファイルを使って、`2020年4月4日`から`2020年4月7日`までのIDSログを対象にアノマリ検知を実施する場合は次のようになります。
 ```
-poetry run kids --config path/to/config.json --date_from 2020-04-04 --date_to 2020-04-07
+poetry run psykoda --config path/to/config.json --date_from 2020-04-04 --date_to 2020-04-07
 ```
 
 <a id="kekka"></a>
