@@ -41,6 +41,7 @@
 <span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">getLogger</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
 
 <span class="kn">from</span> <span class="nn">psykoda.constants</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">ip</span>
@@ -52,12 +53,46 @@
 <div class="viewcode-block" id="RoundDatetime"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.RoundDatetime">[docs]</a><span class="k">class</span> <span class="nc">RoundDatetime</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span> <span class="o">=</span> <span class="n">time_unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">smaller_time_unit</span><span class="p">:</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">smaller_time_unit</span> <span class="ow">in</span> <span class="n">_time_units</span><span class="p">[:</span> <span class="n">_time_units</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">)]</span>
+        <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
             <span class="n">datetime_rounded</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime_full&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">dt</span><span class="p">:</span> <span class="n">round_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">)</span>
+                <span class="k">lambda</span> <span class="n">dt</span><span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span>
             <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FastRoundDatetime"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.FastRoundDatetime">[docs]</a><span class="k">class</span> <span class="nc">FastRoundDatetime</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span> <span class="o">=</span> <span class="n">time_unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;microsecond&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="s2">&quot;second&quot;</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">**</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;minute&quot;</span><span class="p">:</span> <span class="mi">60</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">**</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="s2">&quot;hour&quot;</span><span class="p">:</span> <span class="mi">3600</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">**</span> <span class="mi">3</span><span class="p">),</span>
+            <span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">**</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">roundfunc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_roundfunc</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FastRoundDatetime.gen_roundfunc"><a class="viewcode-back" href="../../psykoda.preprocess.html#psykoda.preprocess.FastRoundDatetime.gen_roundfunc">[docs]</a>    <span class="k">def</span> <span class="nf">gen_roundfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time_unit</span><span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">timeround</span><span class="p">(</span><span class="n">dt</span><span class="p">):</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">dt</span> <span class="o">%</span> <span class="n">base</span>
+            <span class="k">return</span> <span class="n">dt</span> <span class="o">-</span> <span class="n">delta</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">frompyfunc</span><span class="p">(</span><span class="n">timeround</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+            <span class="n">datetime_rounded</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">roundfunc</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;datetime_full&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;datetime64&quot;</span><span class="p">)</span>
         <span class="p">)</span></div>
 
 
@@ -120,7 +155,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    in_subnets(addr)</span>
 <span class="sd">        predicate for IP addresses</span>
-<span class="sd">    </span>
+
 <span class="sd">    Warnings</span>
 <span class="sd">    --------</span>
 <span class="sd">    Optimized for IPv4.  Does not support IPv6.</span>

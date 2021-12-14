@@ -546,7 +546,7 @@ IDSログは、次の形式をもつCSVファイルです。カラム名と入�
 <section id="id7">
 <h2>実行<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <p>次のコマンドでpsykodaを使ったアノマリ検知を実施することができます。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">kids</span> <span class="p">[</span><span class="o">--</span><span class="n">config</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="o">--</span><span class="n">date_from</span> <span class="n">DATE_FROM</span> <span class="o">--</span><span class="n">date_to</span> <span class="n">DATE_TO</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">psykoda</span> <span class="p">[</span><span class="o">--</span><span class="n">config</span> <span class="n">CONFIG</span><span class="p">]</span> <span class="o">--</span><span class="n">date_from</span> <span class="n">DATE_FROM</span> <span class="o">--</span><span class="n">date_to</span> <span class="n">DATE_TO</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -555,7 +555,7 @@ IDSログは、次の形式をもつCSVファイルです。カラム名と入�
 <li><p>DATE_FROM: 検知終了日(YYYY-MM-DD形式)</p></li>
 </ul>
 <p>例えば、<code class="docutils literal notranslate"><span class="pre">path/to/config.json</span></code>にある設定ファイルを使って、<code class="docutils literal notranslate"><span class="pre">2020年4月4日</span></code>から<code class="docutils literal notranslate"><span class="pre">2020年4月7日</span></code>までのIDSログを対象にアノマリ検知を実施する場合は次のようになります。</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">kids</span> <span class="o">--</span><span class="n">config</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">date_from</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">04</span> <span class="o">--</span><span class="n">date_to</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">07</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">psykoda</span> <span class="o">--</span><span class="n">config</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">date_from</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">04</span> <span class="o">--</span><span class="n">date_to</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">07</span>
 </pre></div>
 </div>
 <p><a id="kekka"></a></p>

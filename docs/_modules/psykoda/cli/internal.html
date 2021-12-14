@@ -355,8 +355,6 @@
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">feature_label</span><span class="o">.</span><span class="n">extract_nonzeros</span><span class="p">()</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">label</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">label</span><span class="o">.</span><span class="n">index</span> <span class="o">&amp;</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
     <span class="n">feature_label</span><span class="o">.</span><span class="n">put_labels</span><span class="p">(</span><span class="n">labeled_samples</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
 
@@ -370,11 +368,6 @@
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Split data and construct labeled training feature.&quot;&quot;&quot;</span>
     <span class="n">train_test_splitted</span> <span class="o">=</span> <span class="n">feature_label</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">date_to_training</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-        <span class="s2">&quot;feature_label.index: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">label.index: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-    <span class="p">)</span>
     <span class="n">idx_labeled</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">feature_label</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">label</span><span class="o">.</span><span class="n">index</span>
@@ -796,7 +789,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">psykoda.io.reader._fujitsu_splunk</span> <span class="kn">import</span> <span class="n">FujitsuSplunk</span>
-    <span class="kn">from</span> <span class="nn">psykoda.preprocess</span> <span class="kn">import</span> <span class="n">RoundDatetime</span><span class="p">,</span> <span class="n">drop_null</span><span class="p">,</span> <span class="n">set_index</span>
+    <span class="kn">from</span> <span class="nn">psykoda.preprocess</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">FastRoundDatetime</span><span class="p">,</span>
+        <span class="n">RoundDatetime</span><span class="p">,</span>
+        <span class="n">drop_null</span><span class="p">,</span>
+        <span class="n">set_index</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="kn">from</span> <span class="nn">psykoda.utils</span> <span class="kn">import</span> <span class="n">daterange2list</span>
 
     <span class="n">daterange</span> <span class="o">=</span> <span class="n">daterange2list</span><span class="p">(</span><span class="n">date_from</span><span class="p">,</span> <span class="n">date_to</span><span class="p">)</span>
@@ -810,7 +808,7 @@
 
     <span class="n">io</span> <span class="o">=</span> <span class="n">FujitsuSplunk</span><span class="p">(</span><span class="n">dir_IDS_log</span><span class="o">=</span><span class="n">dir_IDS_log</span><span class="p">,</span> <span class="n">nrows_read</span><span class="o">=</span><span class="n">nrows_read</span><span class="p">)</span>
     <span class="n">log</span> <span class="o">=</span> <span class="n">set_index</span><span class="p">(</span>
-        <span class="n">RoundDatetime</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">_load_log_catch</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">load_log</span><span class="p">,</span> <span class="n">daterange</span><span class="p">)))</span>
+        <span class="n">FastRoundDatetime</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">_load_log_catch</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">load_log</span><span class="p">,</span> <span class="n">daterange</span><span class="p">)))</span>
     <span class="p">)</span>
     <span class="n">log</span> <span class="o">=</span> <span class="n">drop_null</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">log</span></div>
