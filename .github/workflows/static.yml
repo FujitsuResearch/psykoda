@@ -44,7 +44,7 @@ jobs:
           # treat Usage error, Warning, Error, Fatal as failure.
           # see bit-encoded exit codes of pylint for detail:
           # https://pylint.pycqa.org/en/latest/user_guide/run.html#exit-codes
-  mypy:
+  pyre:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -56,5 +56,40 @@ jobs:
           curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           poetry install --no-interaction
-      - name: mypy
-        run: poetry run mypy src tests
+      - name: install pyre
+        run: poetry add -D pyre-check
+      - name: pyre
+        run: poetry run pyre --source-directory src check
+  pyright:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: install dependencies
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry install --no-interaction
+      - uses: actions/setup-node@v2
+      - name: install pyright
+        run: npm install -g pyright
+      - name: pyright
+        run: poetry run pyright src tests
+  pytype:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: install dependencies
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry install --no-interaction
+      - name: install pytype
+        run: poetry add -D pytype
+      - name: pytype
+        run: poetry run pytype src tests

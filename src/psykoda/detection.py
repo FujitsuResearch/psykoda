@@ -454,6 +454,9 @@ class DeepSAD:
         """
         # Without type annotation ": ndarray" after score, sphinx treats "score" as type.
         # some text and a blank line is needed before :shape: too.
+
+        if self.detector is None:
+            raise AttributeError("detector is not set")
         score = self.detector.predict(X)
         if not scale:
             return score
@@ -483,12 +486,15 @@ class DeepSAD:
             :shape: (n_samples, dim_embedding)
         """
 
+        detector = self.detector
+        if detector is None:
+            raise AttributeError("detector is not set")
         if X.shape[0] == 0:
             return None
 
         encoder = tf.keras.Model(
-            inputs=self.detector.input,
-            outputs=self.detector.get_layer(LAYERNAME_ENCODER_OUTPUT).output,
+            inputs=detector.input,
+            outputs=detector.get_layer(LAYERNAME_ENCODER_OUTPUT).output,
         )
         return encoder.predict(X)
 
@@ -612,7 +618,9 @@ def detection_report(
 
     for i, sample in enumerate(shap_value_idx_sorted.index):
         shap_values = shap_value_idx_sorted.loc[sample].sort_values(ascending=False)
-        fe = ["__".join(l) for l in list(shap_values.index[:shap_top_k])]
+        fe: List[Union[int, str]] = [
+            "__".join(l) for l in list(shap_values.index[:shap_top_k])
+        ]
         value = list(shap_values.iloc[:shap_top_k])
         for k in range(shap_top_k):
             if value[k] == 0:

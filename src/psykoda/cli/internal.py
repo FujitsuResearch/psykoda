@@ -9,7 +9,7 @@ import shutil
 import warnings
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, cast
 
 import numpy as np
 import pandas as pd
@@ -55,7 +55,7 @@ def configure_logging(debug: bool):
     stderr_handler.addFilter(stderr_filter)
     stderr_handler.setLevel(logging.INFO)
     stderr_handler.setFormatter(logging.Formatter("%(message)s"))
-    handlers = [stderr_handler]
+    handlers: list[logging.Handler] = [stderr_handler]
 
     logfile_handler = logging.FileHandler(PATH_LOG)
     logfile_handler.setLevel(logging.DEBUG)
@@ -398,7 +398,7 @@ def main_detection_skip_or_detect(
     logger.info("outputting detection reports")
     anomaly_score = detector.compute_anomaly_score(x_test, scale=True)
     num_anomaly = min(
-        sum(anomaly_score > anomaly_detection_config.threshold.min_score),
+        np.count_nonzero(anomaly_score > anomaly_detection_config.threshold.min_score),
         anomaly_detection_config.threshold.num_anomaly,
     )
 
@@ -516,6 +516,7 @@ def report_all(path_list_stats: List[str], path_save: str):
         [], columns=["datetime_rounded", "src_ip", "subnet", "service"]
     )
     idx = 0
+    results_shaps = pd.DataFrame()
     for path in path_list_stats:
         # Load stats
         stats = utils.load_json(path)
@@ -538,7 +539,7 @@ def report_all(path_list_stats: List[str], path_save: str):
             results_pd.loc[idx] = [dt, src_ip, subnet, service]
 
             if idx == 0:
-                results_shaps = pd.DataFrame([], columns=report.columns)
+                results_shaps.columns = report.columns
             results_shaps.loc[idx] = report.loc[(dt, src_ip)]
 
             idx += 1
@@ -557,13 +558,14 @@ def report_all(path_list_stats: List[str], path_save: str):
             ret = pd.concat([ret, results_pd_group.get_group(key)])
 
         ret.round(4).to_csv(path_save, index=False)
+        num_anomaly_ipaddr = len(keys)
     else:
         # Anomaly not found
         pd.DataFrame([["no anomaly found"]]).to_csv(path_save, index=False)
+        num_anomaly_ipaddr = 0
 
     logger.info("[RESULT]", extra=to_stderr)
     logger.info("Detection summary file: %s", path_save, extra=to_stderr)
-    num_anomaly_ipaddr = len(keys) if anomaly_found else 0
     logger.info(
         "Number of unique anomaly IP addresses: %s", num_anomaly_ipaddr, extra=to_stderr
     )
@@ -712,7 +714,9 @@ def detect_per_unit(
         label_value=1,
     )
     log_labeled = labeled.factory(config.io.previous.log)[0].load_previous_log(
-        entries=known_normal.index,
+        entries=cast(pd.MultiIndex, known_normal.index),
+        # we can safely assume that known_normal.Index is MultiIndex
+        # since it is empty otherwise.
     )
     log_labeled = apply_exclude_lists(log_labeled, config.preprocess.exclude_lists)
     log_labeled = preprocess.extract_log(
@@ -782,12 +786,12 @@ def load_log(
 
 
 def load_previous(
-    config: LoadPreviousConfigItem, date_to: datetime, label_value: float
+    config: Optional[LoadPreviousConfigItem], date_to: datetime, label_value: float
 ) -> pd.Series:
     from psykoda.preprocess import round_datetime
     from psykoda.utils import DateRange
 
-    if config.list is None:
+    if config is None or config.list is None:
         return pd.Series()
 
     def date_filter(row):
