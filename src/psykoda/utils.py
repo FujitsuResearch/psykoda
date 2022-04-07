@@ -61,7 +61,7 @@ class DateRange:
             yield current
             current = current + timedelta(1)
 
-    def __isin__(self, dt: datetime):
+    def __contains__(self, dt: datetime):
         return self._start <= dt < self._end
 
 
